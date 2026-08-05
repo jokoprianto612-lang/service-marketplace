@@ -1,0 +1,16 @@
+{
+  "name": "@svcmarket/shared-constants",
+  "version": "1.0.0",
+  "description": "Shared constants for Service Marketplace",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc && tsc-alias",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "tsc-alias": "^1.8.0",
+    "typescript": "^5.3.0"
+  }
+}

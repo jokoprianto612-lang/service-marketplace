@@ -1,0 +1,41 @@
+{
+  "name": "service-marketplace",
+  "version": "1.0.0",
+  "description": "Self-hosted Service Marketplace Platform - Deploy managed services on your own infrastructure",
+  "private": true,
+  "workspaces": [
+    "server",
+    "web",
+    "worker",
+    "shared/*"
+  ],
+  "scripts": {
+    "setup": "pnpm install && pnpm --filter @svcmarket/server run db:generate",
+    "dev": "concurrently \"pnpm --filter @svcmarket/server run dev\" \"pnpm --filter @svcmarket/web run dev\" \"pnpm --filter @svcmarket/worker run dev\"",
+    "build": "pnpm --filter @svcmarket/server run build && pnpm --filter @svcmarket/web run build && pnpm --filter @svcmarket/worker run build",
+    "start": "pnpm --filter @svcmarket/server run start",
+    "lint": "pnpm --filter @svcmarket/server run lint && pnpm --filter @svcmarket/web run lint && pnpm --filter @svcmarket/worker run lint",
+    "typecheck": "pnpm --filter @svcmarket/server run typecheck && pnpm --filter @svcmarket/web run typecheck && pnpm --filter @svcmarket/worker run typecheck",
+    "test": "pnpm --filter @svcmarket/server run test && pnpm --filter @svcmarket/web run test && pnpm --filter @svcmarket/worker run test",
+    "db:generate": "pnpm --filter @svcmarket/server run db:generate",
+    "db:push": "pnpm --filter @svcmarket/server run db:push",
+    "db:migrate": "pnpm --filter @svcmarket/server run db:migrate",
+    "db:migrate:prod": "pnpm --filter @svcmarket/server run db:migrate:prod",
+    "db:studio": "pnpm --filter @svcmarket/server run db:studio",
+    "db:seed": "pnpm --filter @svcmarket/server run db:seed",
+    "docker:build": "docker compose -f docker/docker-compose.yml build",
+    "docker:up": "docker compose -f docker/docker-compose.yml up -d",
+    "docker:down": "docker compose -f docker/docker-compose.yml down",
+    "docker:logs": "docker compose -f docker/docker-compose.yml logs -f",
+    "docker:ps": "docker compose -f docker/docker-compose.yml ps",
+    "clean": "pnpm --filter @svcmarket/server run clean && pnpm --filter @svcmarket/web run clean && pnpm --filter @svcmarket/worker run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@9.0.0"
+}

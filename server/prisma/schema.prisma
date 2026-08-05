@@ -1,0 +1,399 @@
+// ─────────────────────────────────────────────
+// Prisma Schema - Service Marketplace
+// ─────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────
+
+enum ServiceCategory {
+  AI_ML
+  AUTOMATION
+  DATABASES
+  MONITORING
+  STORAGE
+  NETWORKING
+  DEVELOPER_TOOLS
+  SECURITY
+  IDENTITY
+  CI_CD
+  MESSAGING
+  SEARCH
+  OTHER
+}
+
+enum ServiceStatus {
+  DEPLOYING
+  RUNNING
+  STOPPED
+  ERROR
+  UPDATING
+  SCALING
+  BACKING_UP
+  RESTORING
+  DELETING
+}
+
+enum ServiceMaturity {
+  ALPHA
+  BETA
+  STABLE
+}
+
+enum PricingModel {
+  FREE
+  FREEMIUM
+  PAID
+}
+
+enum DeploymentTarget {
+  DOCKER
+  DOCKER_SWARM
+  KUBERNETES
+}
+
+enum DeploymentMode {
+  QUICK
+  CUSTOM
+  STACK
+}
+
+enum UserRole {
+  OWNER
+  ADMIN
+  DEVELOPER
+  VIEWER
+}
+
+enum AuthProvider {
+  EMAIL
+  GITHUB
+  GOOGLE
+  OIDC
+}
+
+enum BackupType {
+  FULL
+  INCREMENTAL
+  CONFIG
+}
+
+enum BackupStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  DEPLOY
+  START
+  STOP
+  RESTART
+  SCALE
+  BACKUP
+  RESTORE
+  LOGIN
+  LOGOUT
+  INVITE
+  REVOKE
+}
+
+// ─────────────────────────────────────────────
+// Models
+// ─────────────────────────────────────────────
+
+model User {
+  id            String       @id @default(cuid())
+  email         String       @unique
+  name          String
+  avatar        String?
+  passwordHash  String?
+  provider      AuthProvider @default(EMAIL)
+  providerId    String?
+  roles         UserRole[]   @default([VIEWER])
+  emailVerified DateTime?
+  lastLoginAt   DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  projects      ProjectMember[]
+  deployments   Deployment[] @relation("DeploymentUser")
+  auditLogs     AuditLog[]
+
+  @@index([email])
+  @@index([provider, providerId])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  ownerId     String
+  settings    Json     @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  owner       User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  members     ProjectMember[]
+  services    ServiceInstance[]
+  deployments Deployment[]
+  quotas      ProjectQuotas?
+  auditLogs   AuditLog[]
+
+  @@index([ownerId])
+  @@index([slug])
+}
+
+model ProjectMember {
+  id        String   @id @default(cuid())
+  userId    String
+  projectId String
+  role      UserRole @default(VIEWER)
+  joinedAt  DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId])
+  @@index([projectId])
+}
+
+model ProjectQuotas {
+  id           String @id @default(cuid())
+  projectId    String @unique
+  maxServices  Int    @default(50)
+  maxCpu       Int    @default(10000)      // millicores
+  maxMemory    Int    @default(51200)      // MB
+  maxDisk      Int    @default(512000)     // MB
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  project      Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model ProjectSettings {
+  id              String @id @default(cuid())
+  projectId       String @unique
+  autoDeploy      Boolean @default(false)
+  notifications   Json   @default("{}")
+  backup          Json   @default("{}")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  project         Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model ServiceDefinition {
+  id                  String         @id @default(cuid())
+  name                String
+  slug                String         @unique
+  description         String
+  longDescription     String         @db.Text
+  category            ServiceCategory
+  icon                String
+  version             String
+  maintainer          String
+  repository          String
+  documentation       String
+  license             String
+  dockerCompose       String         @db.Text
+  defaultConfig       Json
+  configSchema        Json
+  minMemory           Int            @default(128)
+  minCpu              Int            @default(100)
+  minDisk             Int            @default(1024)
+  requiresGpu         Boolean        @default(false)
+  supportedArchitectures String[]    @default(["amd64"])
+  tags                String[]
+  pricing             PricingModel   @default(FREE)
+  maturity            ServiceMaturity @default(ALPHA)
+  isActive            Boolean        @default(true)
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  instances           ServiceInstance[]
+
+  @@index([category])
+  @@index([isActive])
+  @@index([slug])
+}
+
+model ServiceInstance {
+  id              String         @id @default(cuid())
+  definitionId    String
+  projectId       String
+  name            String
+  status          ServiceStatus  @default(DEPLOYING)
+  config          Json
+  deploymentInfo  Json?
+  healthStatus    Json?
+  resources       Json?
+  deployedBy      String
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  deployedAt      DateTime?
+  stoppedAt       DateTime?
+
+  definition      ServiceDefinition @relation(fields: [definitionId], references: [id], onDelete: Restrict)
+  project         Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  deployments     Deployment[]
+  backups         BackupJob[]
+  logs            ServiceLog[]
+
+  @@index([projectId])
+  @@index([definitionId])
+  @@index([status])
+  @@index([projectId, status])
+}
+
+model Deployment {
+  id              String           @id @default(cuid())
+  instanceId      String
+  projectId       String
+  userId          String
+  mode            DeploymentMode   @default(QUICK)
+  target          DeploymentTarget @default(DOCKER)
+  targetId        String?
+  status          ServiceStatus    @default(DEPLOYING)
+  config          Json
+  logs            String?          @db.Text
+  error           String?
+  startedAt       DateTime         @default(now())
+  completedAt     DateTime?
+  duration        Int?             // milliseconds
+
+  instance        ServiceInstance  @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  project         Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user            User             @relation("DeploymentUser", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([instanceId])
+  @@index([projectId])
+  @@index([status])
+  @@index([userId])
+}
+
+model BackupJob {
+  id              String       @id @default(cuid())
+  instanceId      String
+  type            BackupType   @default(FULL)
+  status          BackupStatus @default(PENDING)
+  size            BigInt?
+  location        String?
+  error           String?
+  startedAt       DateTime     @default(now())
+  completedAt     DateTime?
+  duration        Int?         // milliseconds
+
+  instance        ServiceInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+
+  @@index([instanceId])
+  @@index([status])
+}
+
+model ServiceLog {
+  id              String   @id @default(cuid())
+  instanceId      String
+  containerId     String
+  containerName   String
+  timestamp       DateTime @default(now())
+  level           String
+  message         String   @db.Text
+  metadata        Json?
+
+  instance        ServiceInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+
+  @@index([instanceId])
+  @@index([timestamp])
+  @@index([instanceId, timestamp])
+}
+
+model AuditLog {
+  id            String     @id @default(cuid())
+  userId        String
+  projectId     String?
+  action        AuditAction
+  resourceType  String
+  resourceId    String
+  metadata      Json?
+  ipAddress     String?
+  userAgent     String?
+  timestamp     DateTime   @default(now())
+
+  user          User       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  project       Project?   @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([projectId])
+  @@index([resourceType, resourceId])
+  @@index([timestamp])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  ipAddress String?
+  userAgent String?
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@index([expiresAt])
+}
+
+model ApiKey {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  keyHash   String   @unique
+  prefix    String
+  scopes    String[]
+  lastUsedAt DateTime?
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([keyHash])
+}
+
+model DeploymentTargetConfig {
+  id        String   @id @default(cuid())
+  projectId String   @unique
+  type      DeploymentTarget @default(DOCKER)
+  config    Json     // Docker socket, K8s config, etc.
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model CatalogSync {
+  id        String   @id @default(cuid())
+  status    String   @default("pending")
+  source    String
+  branch    String
+  services  Int      @default(0)
+  error     String?
+  startedAt DateTime @default(now())
+  completedAt DateTime?
+}

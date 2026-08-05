@@ -1,0 +1,165 @@
+{
+  "id": "hermes-ai-agent",
+  "name": "Hermes AI Agent",
+  "description": "Self-improving AI agent by Nous Research with skills, memory, and multi-platform support",
+  "longDescription": "# Hermes AI Agent\n\n[Hermes](https://github.com/NousResearch/Hermes) is a self-improving AI agent by Nous Research that builds skills from experience and remembers how you work. It can be reached on WhatsApp, Telegram, Discord, or Slack, supports MCP servers, and allows bringing your own LLM API key.\n\n## Features\n- **Self-Improving** - Builds skills from every interaction\n- **Persistent Memory** - Remembers preferences, corrections, and workflows\n- **Multi-Platform** - WhatsApp, Telegram, Discord, Slack\n- **MCP Support** - Connect to Model Context Protocol servers\n- **BYOK** - Bring Your Own LLM API key (OpenAI, Anthropic, etc.)\n- **Skill System** - Extensible capabilities via skills\n- **Private Dashboard** - Web UI for management and monitoring\n\n## Use Cases\n- Personal AI assistant that learns your workflow\n- Team productivity agent with shared memory\n- Automated research and analysis\n- Code review and development assistance\n- Customer support automation\n\n## Requirements\n- Minimum 1GB RAM (2GB+ recommended)\n- LLM API key (OpenAI, Anthropic, or local via Ollama)\n- Persistent storage for memory and skills\n- Network access for MCP servers and platforms",
+  "category": "ai-ml",
+  "icon": "bot",
+  "version": "1.0.0",
+  "maintainer": "NousResearch",
+  "repository": "https://github.com/NousResearch/Hermes",
+  "documentation": "https://hermes-agent.nousresearch.com/docs",
+  "license": "MIT",
+  "dockerCompose": "version: '3.8'\n\nservices:\n  hermes:\n    image: ghcr.io/nousresearch/hermes:latest\n    container_name: {{PROJECT_NAME}}-hermes\n    restart: unless-stopped\n    ports:\n      - \"{{HOST_PORT}}:8000\"\n    environment:\n      - HERMES_HOST=0.0.0.0\n      - HERMES_PORT=8000\n      - HERMES_LOG_LEVEL={{LOG_LEVEL}}\n      - HERMES_DB_PATH=/app/data/hermes.db\n      - HERMES_SKILLS_PATH=/app/skills\n      - HERMES_PROFILE={{PROFILE}}\n      - LLM_PROVIDER={{LLM_PROVIDER}}\n      - LLM_API_KEY={{LLM_API_KEY}}\n      - LLM_MODEL={{LLM_MODEL}}\n      - EMBEDDING_PROVIDER={{EMBEDDING_PROVIDER}}\n      - EMBEDDING_API_KEY={{EMBEDDING_API_KEY}}\n      - EMBEDDING_MODEL={{EMBEDDING_MODEL}}\n      - TELEGRAM_BOT_TOKEN={{TELEGRAM_BOT_TOKEN}}\n      - TELEGRAM_CHAT_ID={{TELEGRAM_CHAT_ID}}\n      - DISCORD_BOT_TOKEN={{DISCORD_BOT_TOKEN}}\n      - DISCORD_CLIENT_ID={{DISCORD_CLIENT_ID}}\n      - SLACK_BOT_TOKEN={{SLACK_BOT_TOKEN}}\n      - SLACK_SIGNING_SECRET={{SLACK_SIGNING_SECRET}}\n      - WHATSAPP_SESSION_PATH=/app/data/whatsapp\n      - MCP_SERVERS={{MCP_SERVERS}}\n    volumes:\n      - hermes_data:/app/data\n      - hermes_skills:/app/skills\n    healthcheck:\n      test: [\"CMD\", \"wget\", \"--no-verbose\", \"--tries=1\", \"--spider\", \"http://localhost:8000/health\"]\n      interval: 30s\n      timeout: 10s\n      retries: 3\n      start_period: 20s\n\nvolumes:\n  hermes_data:\n  hermes_skills:",
+  "defaultConfig": {
+    "envVars": {
+      "LOG_LEVEL": "info",
+      "PROFILE": "default",
+      "LLM_PROVIDER": "openai",
+      "LLM_API_KEY": "{{REQUIRED:LLM_API_KEY}}",
+      "LLM_MODEL": "gpt-4o",
+      "EMBEDDING_PROVIDER": "openai",
+      "EMBEDDING_API_KEY": "{{REQUIRED:EMBEDDING_API_KEY}}",
+      "EMBEDDING_MODEL": "text-embedding-3-small",
+      "HOST_PORT": "8000",
+      "TELEGRAM_BOT_TOKEN": "",
+      "TELEGRAM_CHAT_ID": "",
+      "DISCORD_BOT_TOKEN": "",
+      "DISCORD_CLIENT_ID": "",
+      "SLACK_BOT_TOKEN": "",
+      "SLACK_SIGNING_SECRET": "",
+      "MCP_SERVERS": "[]"
+    },
+    "volumes": [
+      { "name": "hermes_data", "containerPath": "/app/data", "type": "volume" },
+      { "name": "hermes_skills", "containerPath": "/app/skills", "type": "volume" }
+    ],
+    "ports": [
+      { "containerPort": 8000, "hostPort": 8000, "protocol": "tcp", "expose": true }
+    ],
+    "resources": {
+      "memory": "2g",
+      "cpu": "1.0"
+    },
+    "healthCheck": {
+      "test": ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/health"],
+      "interval": "30s",
+      "timeout": "10s",
+      "retries": 3,
+      "startPeriod": "20s"
+    },
+    "dependsOn": [],
+    "networks": ["default"],
+    "secrets": [
+      { "name": "LLM_API_KEY", "generate": false },
+      { "name": "EMBEDDING_API_KEY", "generate": false },
+      { "name": "TELEGRAM_BOT_TOKEN", "generate": false },
+      { "name": "DISCORD_BOT_TOKEN", "generate": false },
+      { "name": "SLACK_BOT_TOKEN", "generate": false },
+      { "name": "SLACK_SIGNING_SECRET", "generate": false }
+    ]
+  },
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "LLM_PROVIDER": {
+        "type": "string",
+        "title": "LLM Provider",
+        "description": "Provider for the main LLM",
+        "default": "openai",
+        "enum": ["openai", "anthropic", "ollama", "custom"]
+      },
+      "LLM_API_KEY": {
+        "type": "string",
+        "title": "LLM API Key",
+        "description": "API key for the LLM provider (required)",
+        "format": "password"
+      },
+      "LLM_MODEL": {
+        "type": "string",
+        "title": "LLM Model",
+        "description": "Model to use for the main LLM",
+        "default": "gpt-4o",
+        "enum": ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "claude-3-5-sonnet", "claude-3-opus", "llama3.1:70b", "llama3.1:8b"]
+      },
+      "EMBEDDING_PROVIDER": {
+        "type": "string",
+        "title": "Embedding Provider",
+        "description": "Provider for embeddings (memory/search)",
+        "default": "openai",
+        "enum": ["openai", "ollama", "huggingface"]
+      },
+      "EMBEDDING_API_KEY": {
+        "type": "string",
+        "title": "Embedding API Key",
+        "description": "API key for embedding provider (required if not using local)",
+        "format": "password"
+      },
+      "EMBEDDING_MODEL": {
+        "type": "string",
+        "title": "Embedding Model",
+        "description": "Model to use for embeddings",
+        "default": "text-embedding-3-small",
+        "enum": ["text-embedding-3-small", "text-embedding-3-large", "nomic-embed-text", "mxbai-embed-large"]
+      },
+      "LOG_LEVEL": {
+        "type": "string",
+        "title": "Log Level",
+        "default": "info",
+        "enum": ["debug", "info", "warn", "error"]
+      },
+      "TELEGRAM_BOT_TOKEN": {
+        "type": "string",
+        "title": "Telegram Bot Token",
+        "description": "Bot token from @BotFather (optional)",
+        "format": "password"
+      },
+      "TELEGRAM_CHAT_ID": {
+        "type": "string",
+        "title": "Telegram Chat ID",
+        "description": "Your chat ID for direct messages (optional)"
+      },
+      "DISCORD_BOT_TOKEN": {
+        "type": "string",
+        "title": "Discord Bot Token",
+        "description": "Bot token from Discord Developer Portal (optional)",
+        "format": "password"
+      },
+      "DISCORD_CLIENT_ID": {
+        "type": "string",
+        "title": "Discord Client ID",
+        "description": "Application Client ID from Discord (optional)"
+      },
+      "SLACK_BOT_TOKEN": {
+        "type": "string",
+        "title": "Slack Bot Token",
+        "description": "Bot User OAuth Token from Slack (optional)",
+        "format": "password"
+      },
+      "SLACK_SIGNING_SECRET": {
+        "type": "string",
+        "title": "Slack Signing Secret",
+        "description": "Signing Secret from Slack App config (optional)",
+        "format": "password"
+      },
+      "MCP_SERVERS": {
+        "type": "string",
+        "title": "MCP Servers (JSON)",
+        "description": "JSON array of MCP server configurations",
+        "default": "[]"
+      }
+    },
+    "required": ["LLM_API_KEY", "EMBEDDING_API_KEY"],
+    "additionalProperties": false
+  },
+  "minMemory": 1024,
+  "minCpu": 1000,
+  "minDisk": 5120,
+  "requiresGpu": false,
+  "supportedArchitectures": ["amd64", "arm64"],
+  "tags": ["ai", "agent", "llm", "automation", "memory", "skills", "mcp", "nous-research"],
+  "pricing": "free",
+  "maturity": "beta",
+  "createdAt": "2026-06-01T00:00:00Z",
+  "updatedAt": "2026-08-01T00:00:00Z"
+}

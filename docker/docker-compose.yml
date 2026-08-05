@@ -1,0 +1,280 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: svcmarket-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-svcmarket}
+      POSTGRES_USER: ${POSTGRES_USER:-svcmarket}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-svcmarket} -d ${POSTGRES_DB:-svcmarket}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - svcmarket-internal
+
+  redis:
+    image: redis:7-alpine
+    container_name: svcmarket-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - svcmarket-internal
+
+  traefik:
+    image: traefik:v3.0
+    container_name: svcmarket-traefik
+    restart: unless-stopped
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=false"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=svcmarket-public"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL:-admin@example.com}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--log.level=INFO"
+      - "--accesslog=true"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - letsencrypt_data:/letsencrypt
+    networks:
+      - svcmarket-public
+      - svcmarket-internal
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN:-localhost}`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.traefik.service=api@internal"
+
+  api:
+    build:
+      context: ../server
+      dockerfile: Dockerfile
+      target: production
+    container_name: svcmarket-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-svcmarket}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-svcmarket}?schema=public
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+      REFRESH_TOKEN_EXPIRES_IN: ${REFRESH_TOKEN_EXPIRES_IN:-30d}
+      AUTH_GITHUB_CLIENT_ID: ${AUTH_GITHUB_CLIENT_ID}
+      AUTH_GITHUB_CLIENT_SECRET: ${AUTH_GITHUB_CLIENT_SECRET}
+      AUTH_GOOGLE_CLIENT_ID: ${AUTH_GOOGLE_CLIENT_ID}
+      AUTH_GOOGLE_CLIENT_SECRET: ${AUTH_GOOGLE_CLIENT_SECRET}
+      AUTH_OIDC_ISSUER: ${AUTH_OIDC_ISSUER}
+      AUTH_OIDC_CLIENT_ID: ${AUTH_OIDC_CLIENT_ID}
+      AUTH_OIDC_CLIENT_SECRET: ${AUTH_OIDC_CLIENT_SECRET}
+      DOCKER_HOST: unix:///var/run/docker.sock
+      DOCKER_TLS_VERIFY: "0"
+      CATALOG_PATH: /app/catalog
+      CATALOG_GIT_REPO: ${CATALOG_GIT_REPO}
+      CATALOG_GIT_BRANCH: ${CATALOG_GIT_BRANCH:-main}
+      CATALOG_GIT_TOKEN: ${CATALOG_GIT_TOKEN}
+      PROMETHEUS_URL: http://prometheus:9090
+      GRAFANA_URL: http://grafana:3000
+      APP_URL: https://${DOMAIN:-localhost}
+      FRONTEND_URL: https://${DOMAIN:-localhost}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - catalog_data:/app/catalog
+      - ./docker/api/entrypoint.sh:/entrypoint.sh:ro
+    entrypoint: ["/entrypoint.sh"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - svcmarket-internal
+      - svcmarket-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`api.${DOMAIN:-localhost}`)"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.api.loadbalancer.server.port=3000"
+
+  web:
+    build:
+      context: ../web
+      dockerfile: Dockerfile
+      target: production
+    container_name: svcmarket-web
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      VITE_API_URL: https://api.${DOMAIN:-localhost}
+      VITE_WS_URL: wss://api.${DOMAIN:-localhost}
+      VITE_APP_NAME: ${VITE_APP_NAME:-Service Marketplace}
+    networks:
+      - svcmarket-internal
+      - svcmarket-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=Host(`${DOMAIN:-localhost}`)"
+      - "traefik.http.routers.web.entrypoints=websecure"
+      - "traefik.http.routers.web.tls.certresolver=letsencrypt"
+      - "traefik.http.services.web.loadbalancer.server.port=80"
+
+  worker:
+    build:
+      context: ../worker
+      dockerfile: Dockerfile
+      target: production
+    container_name: svcmarket-worker
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-svcmarket}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-svcmarket}?schema=public
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+      DOCKER_HOST: unix:///var/run/docker.sock
+      DOCKER_TLS_VERIFY: "0"
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - catalog_data:/app/catalog:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - svcmarket-internal
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+
+  prometheus:
+    image: prom/prometheus:v2.53
+    container_name: svcmarket-prometheus
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=30d"
+      - "--web.enable-lifecycle"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - svcmarket-internal
+    profiles:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:11.0
+    container_name: svcmarket-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    networks:
+      - svcmarket-internal
+      - svcmarket-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.${DOMAIN:-localhost}`)"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+    profiles:
+      - monitoring
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49
+    container_name: svcmarket-cadvisor
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    networks:
+      - svcmarket-internal
+    profiles:
+      - monitoring
+
+  backup:
+    image: ghcr.io/okongzinc/svcmarket-backup:latest
+    container_name: svcmarket-backup
+    restart: unless-stopped
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: ${POSTGRES_DB:-svcmarket}
+      POSTGRES_USER: ${POSTGRES_USER:-svcmarket}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      S3_ENDPOINT: ${BACKUP_S3_ENDPOINT}
+      S3_BUCKET: ${BACKUP_S3_BUCKET}
+      S3_ACCESS_KEY: ${BACKUP_S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${BACKUP_S3_SECRET_KEY}
+      BACKUP_SCHEDULE: ${BACKUP_SCHEDULE:-0 2 * * *}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-30}
+    volumes:
+      - catalog_data:/app/catalog:ro
+    networks:
+      - svcmarket-internal
+    profiles:
+      - backup
+
+networks:
+  svcmarket-public:
+    driver: bridge
+    name: svcmarket-public
+  svcmarket-internal:
+    driver: bridge
+    internal: true
+    name: svcmarket-internal
+
+volumes:
+  postgres_data:
+    name: svcmarket-postgres
+  redis_data:
+    name: svcmarket-redis
+  letsencrypt_data:
+    name: svcmarket-letsencrypt
+  catalog_data:
+    name: svcmarket-catalog
+  prometheus_data:
+    name: svcmarket-prometheus
+  grafana_data:
+    name: svcmarket-grafana

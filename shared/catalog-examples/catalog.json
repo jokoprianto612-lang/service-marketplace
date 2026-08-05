@@ -1,0 +1,24 @@
+{
+  "version": "1.0",
+  "updatedAt": "2026-08-06T00:00:00Z",
+  "services": [
+    "n8n-workflow",
+    "hermes-ai-agent"
+  ],
+  "categories": [
+    {
+      "id": "automation",
+      "name": "Automation",
+      "description": "Workflow automation and integration tools",
+      "icon": "⚡",
+      "serviceCount": 1
+    },
+    {
+      "id": "ai-ml",
+      "name": "AI/ML",
+      "description": "Artificial intelligence and machine learning services",
+      "icon": "🤖",
+      "serviceCount": 1
+    }
+  ]
+}

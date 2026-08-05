@@ -1,0 +1,96 @@
+{
+  "id": "n8n-workflow",
+  "name": "n8n Workflow Automation",
+  "description": "Extendable workflow automation tool with 400+ integrations",
+  "longDescription": "# n8n Workflow Automation\n\n[n8n](https://n8n.io/) is a fair-code workflow automation tool that lets you connect anything to everything. With 400+ built-in integrations and a visual editor, you can automate complex workflows without writing code.\n\n## Features\n- **Visual Workflow Editor** - Drag and drop to create workflows\n- **400+ Integrations** - Connect to popular services (Slack, GitHub, Google Sheets, etc.)\n- **Self-hosted** - Full control over your data and infrastructure\n- **Extensible** - Write custom nodes in TypeScript/JavaScript\n- **Execution Modes** - Run workflows on schedule, webhook, or manually\n\n## Use Cases\n- Automate repetitive tasks across services\n- Build internal tools and dashboards\n- Sync data between applications\n- Create custom API endpoints\n- Process webhooks and events\n\n## Requirements\n- Minimum 512MB RAM\n- PostgreSQL database (included in deployment)\n- Persistent storage for workflow data",
+  "category": "automation",
+  "icon": "workflow",
+  "version": "1.42.0",
+  "maintainer": "n8n-io",
+  "repository": "https://github.com/n8n-io/n8n",
+  "documentation": "https://docs.n8n.io/",
+  "license": "Apache-2.0",
+  "dockerCompose": "version: '3.8'\n\nservices:\n  n8n:\n    image: docker.n8n.io/n8nio/n8n:latest\n    container_name: {{PROJECT_NAME}}-n8n\n    restart: unless-stopped\n    ports:\n      - \"{{HOST_PORT}}:5678\"\n    environment:\n      - N8N_BASIC_AUTH_ACTIVE=true\n      - N8N_BASIC_AUTH_USER={{USERNAME}}\n      - N8N_BASIC_AUTH_PASSWORD={{PASSWORD}}\n      - N8N_HOST={{DOMAIN}}\n      - N8N_PORT=5678\n      - N8N_PROTOCOL=https\n      - WEBHOOK_URL=https://{{DOMAIN}}/webhook/\n      - GENERIC_TIMEZONE={{TIMEZONE}}\n      - DB_TYPE=postgresdb\n      - DB_POSTGRESDB_HOST=postgres\n      - DB_POSTGRESDB_PORT=5432\n      - DB_POSTGRESDB_DATABASE={{POSTGRES_DB}}\n      - DB_POSTGRESDB_USER={{POSTGRES_USER}}\n      - DB_POSTGRESDB_PASSWORD={{POSTGRES_PASSWORD}}\n      - EXECUTIONS_MODE=regular\n      - N8N_RUNNERS_ENABLED=true\n    volumes:\n      - n8n_data:/home/node/.n8n\n    depends_on:\n      postgres:\n        condition: service_healthy\n    healthcheck:\n      test: [\"CMD\", \"wget\", \"--no-verbose\", \"--tries=1\", \"--spider\", \"http://localhost:5678/healthz\"]\n      interval: 30s\n      timeout: 10s\n      retries: 3\n      start_period: 10s\n\n  postgres:\n    image: postgres:16-alpine\n    container_name: {{PROJECT_NAME}}-n8n-postgres\n    restart: unless-stopped\n    environment:\n      POSTGRES_DB: {{POSTGRES_DB}}\n      POSTGRES_USER: {{POSTGRES_USER}}\n      POSTGRES_PASSWORD: {{POSTGRES_PASSWORD}}\n    volumes:\n      - postgres_data:/var/lib/postgresql/data\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U {{POSTGRES_USER}} -d {{POSTGRES_DB}}\"]\n      interval: 10s\n      timeout: 5s\n      retries: 5\n\nvolumes:\n  n8n_data:\n  postgres_data:",
+  "defaultConfig": {
+    "envVars": {
+      "USERNAME": "admin",
+      "PASSWORD": "{{GENERATE_PASSWORD:16}}",
+      "POSTGRES_DB": "n8n",
+      "POSTGRES_USER": "n8n",
+      "POSTGRES_PASSWORD": "{{GENERATE_PASSWORD:32}}",
+      "TIMEZONE": "UTC",
+      "HOST_PORT": "5678"
+    },
+    "volumes": [
+      { "name": "n8n_data", "containerPath": "/home/node/.n8n", "type": "volume" },
+      { "name": "postgres_data", "containerPath": "/var/lib/postgresql/data", "type": "volume" }
+    ],
+    "ports": [
+      { "containerPort": 5678, "hostPort": 5678, "protocol": "tcp", "expose": true }
+    ],
+    "resources": {
+      "memory": "1g",
+      "cpu": "1.0"
+    },
+    "healthCheck": {
+      "test": ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5678/healthz"],
+      "interval": "30s",
+      "timeout": "10s",
+      "retries": 3,
+      "startPeriod": "10s"
+    },
+    "dependsOn": ["postgres"],
+    "networks": ["default"],
+    "secrets": [
+      { "name": "PASSWORD", "generate": true, "length": 16 },
+      { "name": "POSTGRES_PASSWORD", "generate": true, "length": 32 }
+    ]
+  },
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "USERNAME": {
+        "type": "string",
+        "title": "Admin Username",
+        "description": "Username for n8n web interface",
+        "default": "admin",
+        "minLength": 3,
+        "maxLength": 50
+      },
+      "PASSWORD": {
+        "type": "string",
+        "title": "Admin Password",
+        "description": "Password for n8n web interface (leave empty to auto-generate)",
+        "format": "password",
+        "minLength": 8
+      },
+      "TIMEZONE": {
+        "type": "string",
+        "title": "Timezone",
+        "description": "Timezone for scheduled workflows",
+        "default": "UTC",
+        "enum": ["UTC", "America/New_York", "America/Los_Angeles", "Europe/London", "Europe/Berlin", "Asia/Tokyo", "Asia/Shanghai", "Australia/Sydney"]
+      },
+      "HOST_PORT": {
+        "type": "number",
+        "title": "Host Port",
+        "description": "Port to expose on host (for direct access without proxy)",
+        "default": 5678,
+        "minimum": 1024,
+        "maximum": 65535
+      }
+    },
+    "required": ["USERNAME"],
+    "additionalProperties": false
+  },
+  "minMemory": 512,
+  "minCpu": 500,
+  "minDisk": 2048,
+  "requiresGpu": false,
+  "supportedArchitectures": ["amd64", "arm64"],
+  "tags": ["automation", "workflow", "integration", "nocode", "fair-code"],
+  "pricing": "free",
+  "maturity": "stable",
+  "createdAt": "2026-01-15T00:00:00Z",
+  "updatedAt": "2026-08-01T00:00:00Z"
+}
