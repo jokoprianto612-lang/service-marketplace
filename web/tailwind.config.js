@@ -84,6 +84,8 @@ export default {
           500: '#f59e0b',
           600: '#d97706',
           700: '#b45309',
+          800: '#92400e',
+          900: '#78350f',
         },
         error: {
           50: '#fef2f2',
@@ -94,6 +96,8 @@ export default {
           500: '#ef4444',
           600: '#dc2626',
           700: '#b91c1c',
+          800: '#991b1b',
+          900: '#7f1d1d',
         },
       },
       fontFamily: {
@@ -135,7 +139,7 @@ export default {
         'card-hover': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
         'elevation-1': '0 1px 2px 0 rgb(0 0 0 / 0.05)',
         'elevation-2': '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-        'elevation-3': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(node:3',
+        'elevation-3': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
         'elevation-4': '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04)',
         'glass': '0 4px 30px rgb(0 0 0 / 0.08), 0 1px 0 rgb(255 255 255 / 0.1) inset',
         'glass-hover': '0 8px 32px rgb(0 0 0 / 0.1), 0 1px 0 rgb(255 255 255 / 0.15) inset',
