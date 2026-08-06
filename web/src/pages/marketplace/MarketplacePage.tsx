@@ -160,20 +160,19 @@ export function MarketplacePage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // Navigate with search params
   };
 
   return (
-    <div className="space-y-6 animate-in">
+    <div className="section animate-in">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="section-header">
         <div>
-          <h1 className="text-2xl font-bold text-white">Marketplace</h1>
-          <p className="text-dark-400 mt-1">Discover and deploy services instantly</p>
+          <h1 className="text-display-sm font-bold text-white">Marketplace</h1>
+          <p className="section-subtitle">Discover and deploy services instantly</p>
         </div>
         <div className="flex items-center gap-3">
           <button className="btn-secondary">
-            <Layers className="h-4 w-4" />
+            <Layers className="h-4 w-4" aria-hidden="true" />
             Stacks
           </button>
         </div>
@@ -183,7 +182,7 @@ export function MarketplacePage() {
       <div className="card p-4">
         <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-dark-500" />
+            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-dark-500" aria-hidden="true" />
             <input
               type="search"
               value={query}
@@ -192,7 +191,7 @@ export function MarketplacePage() {
               className="input pl-12"
             />
           </div>
-          
+
           <div className="flex items-center gap-2">
             <select
               value={selectedCategory}
@@ -204,11 +203,13 @@ export function MarketplacePage() {
               ))}
             </select>
 
-            <div className="flex border border-dark-600 rounded-lg overflow-hidden">
+            <div className="flex border border-dark-700 rounded-md overflow-hidden">
               <button
                 type="button"
                 onClick={() => setViewMode('grid')}
                 className={cn('p-2 transition-colors', viewMode === 'grid' ? 'bg-dark-700 text-white' : 'text-dark-400 hover:text-white')}
+                aria-label="Grid view"
+                aria-pressed={viewMode === 'grid'}
               >
                 <div className="grid grid-cols-2 gap-1 h-5 w-5">
                   <div className="bg-dark-600 rounded" />
@@ -221,8 +222,10 @@ export function MarketplacePage() {
                 type="button"
                 onClick={() => setViewMode('list')}
                 className={cn('p-2 transition-colors', viewMode === 'list' ? 'bg-dark-700 text-white' : 'text-dark-400 hover:text-white')}
+                aria-label="List view"
+                aria-pressed={viewMode === 'list'}
               >
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
@@ -233,8 +236,8 @@ export function MarketplacePage() {
 
       {/* Services Grid/List */}
       <div className={cn(
-        viewMode === 'grid' 
-          ? 'grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
+        viewMode === 'grid'
+          ? 'grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
           : 'space-y-3'
       )}>
         {filteredServices.map((service) => (
@@ -243,10 +246,10 @@ export function MarketplacePage() {
       </div>
 
       {filteredServices.length === 0 && (
-        <div className="card p-12 text-center">
-          <Search className="h-12 w-12 text-dark-500 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-white mb-2">No services found</h3>
-          <p className="text-dark-400">Try adjusting your search or filters</p>
+        <div className="empty-state">
+          <Search className="empty-state-icon h-12 w-12" aria-hidden="true" />
+          <h3 className="empty-state-title">No services found</h3>
+          <p className="empty-state-description">Try adjusting your search or filters</p>
         </div>
       )}
     </div>
@@ -272,7 +275,7 @@ function ServiceCard({ service, mode }: { service: typeof services[0]; mode: 'gr
         to={`/marketplace/${service.id}`}
         className="card-hover flex items-center gap-4 p-4 group"
       >
-        <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-dark-800 text-2xl shrink-0">
+        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-dark-800 text-2xl shrink-0">
           {service.icon}
         </div>
         <div className="flex-1 min-w-0">
@@ -285,8 +288,8 @@ function ServiceCard({ service, mode }: { service: typeof services[0]; mode: 'gr
               {service.pricing}
             </span>
           </div>
-          <p className="text-sm text-dark-400 mt-1 truncate">{service.description}</p>
-          <div className="flex items-center gap-3 mt-2 text-xs text-dark-500">
+          <p className="text-body-sm text-dark-400 mt-1 truncate">{service.description}</p>
+          <div className="flex items-center gap-3 mt-2 text-caption text-dark-500">
             <span>v{service.version}</span>
             <span>⭐ {service.stars.toLocaleString()}</span>
           </div>
@@ -300,9 +303,9 @@ function ServiceCard({ service, mode }: { service: typeof services[0]; mode: 'gr
 
   return (
     <Link to={`/marketplace/${service.id}`} className="card-hover flex flex-col h-full">
-      <div className="p-4">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-dark-800 text-2xl">
+      <div className="p-5">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-dark-800 text-2xl">
             {service.icon}
           </div>
           <div className="flex items-center gap-1">
@@ -314,7 +317,7 @@ function ServiceCard({ service, mode }: { service: typeof services[0]; mode: 'gr
         <h3 className="font-semibold text-white mb-1 group-hover:text-primary-400 transition-colors">
           {service.name}
         </h3>
-        <p className="text-sm text-dark-400 mb-3 line-clamp-2">{service.description}</p>
+        <p className="text-body-sm text-dark-400 mb-4 line-clamp-2">{service.description}</p>
         <div className="flex flex-wrap gap-1.5 mb-4">
           {service.tags.slice(0, 3).map((tag) => (
             <span key={tag} className="badge badge-neutral">{tag}</span>
@@ -324,10 +327,10 @@ function ServiceCard({ service, mode }: { service: typeof services[0]; mode: 'gr
           )}
         </div>
       </div>
-      <div className="border-t border-dark-700 p-4 pt-3">
+      <div className="border-t border-dark-800 p-5 pt-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs text-dark-500">
-            <span>v{service.version}</span>
+          <div className="flex items-center gap-2 text-caption text-dark-500">
+            <span className="font-mono">v{service.version}</span>
             <span className="text-dark-600">·</span>
             <span>⭐ {service.stars.toLocaleString()}</span>
           </div>
