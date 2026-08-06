@@ -15,12 +15,12 @@ import { config } from '../config';
 export async function registerPlugins(app: FastifyInstance) {
   // Security
   await app.register(helmet, {
-    contentSecurityPolicy: config.nodeEnv === 'production' ? undefined : false,
+    contentSecurityPolicy: config.NODE_ENV === 'production' ? undefined : false,
   });
 
   // CORS
   await app.register(cors, {
-    origin: config.nodeEnv === 'development' ? true : config.FRONTEND_URL,
+    origin: config.NODE_ENV === 'development' ? true : config.FRONTEND_URL,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });
@@ -72,7 +72,4 @@ export async function registerPlugins(app: FastifyInstance) {
     routePrefix: '/docs',
     uiConfig: { docExpansion: 'list', deepLinking: true },
   });
-
-  // Prisma client decorator
-  app.decorate('prisma', null); // Will be set in main.ts after PrismaClient import
 }

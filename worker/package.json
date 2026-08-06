@@ -1,36 +1,37 @@
 {
   "name": "@svcmarket/worker",
   "version": "1.0.0",
-  "description": "Service Marketplace Background Worker",
+  "description": "Service Marketplace Cloudflare Worker",
   "private": true,
   "main": "dist/worker.js",
   "types": "dist/worker.d.ts",
   "scripts": {
-    "dev": "tsx watch src/worker.ts",
+    "dev": "wrangler dev",
     "build": "tsc && tsc-alias",
-    "start": "node dist/worker.js",
+    "deploy": "wrangler deploy",
+    "deploy:preview": "wrangler deploy --env preview",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "cf:typegen": "wrangler types"
   },
   "dependencies": {
     "@prisma/client": "^5.10.0",
+    "@hono/zod-validator": "^0.2.0",
     "bullmq": "^5.7.0",
-    "dockerode": "^4.0.0",
+    "hono": "^4.2.0",
     "ioredis": "^5.3.0",
-    "pino": "^8.19.0",
-    "pino-pretty": "^11.0.0",
     "zod": "^3.22.0"
   },
   "devDependencies": {
-    "@types/dockerode": "^3.3.0",
+    "@cloudflare/workers-types": "^4.20240801.0",
     "@types/node": "^20.11.0",
     "prisma": "^5.10.0",
     "tsc-alias": "^1.8.0",
-    "tsx": "^4.7.0",
     "typescript": "^5.3.0",
-    "vitest": "^1.3.0"
+    "vitest": "^1.3.0",
+    "wrangler": "^3.40.0"
   },
   "engines": {
     "node": ">=20.0.0"

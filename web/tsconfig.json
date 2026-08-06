@@ -20,8 +20,8 @@
       "@/*": ["src/*"],
       "@svcmarket/shared/*": ["../shared/*"]
     },
-    "types": ["vite/client", "vite-plugin-svgr/client"]
+    "types": ["vite/client"]
   },
-  "include": ["src", "vite.config.ts"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

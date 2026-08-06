@@ -2,7 +2,7 @@
 // Marketplace Page
 // ─────────────────────────────────────────────
 import { Link, useSearch } from '@tanstack/react-router';
-import { Search, Filter, ChevronDown, Box, Cpu, Database, Activity, HardDrive, Globe, Shield, User, Terminal, GitBranch, Search as SearchIcon, Layers, Zap, Brain } from 'lucide-react';
+import { Search, Box, Database, Activity, HardDrive, Globe, Shield, User, Terminal, GitBranch, Search as SearchIcon, Layers, Zap, Brain } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '../../utils/cn';
 
@@ -254,13 +254,13 @@ export function MarketplacePage() {
 }
 
 function ServiceCard({ service, mode }: { service: typeof services[0]; mode: 'grid' | 'list' }) {
-  const maturityColors = {
+  const maturityColors: Record<string, string> = {
     stable: 'badge-success',
     beta: 'badge-warning',
     alpha: 'badge-error',
   };
 
-  const pricingColors = {
+  const pricingColors: Record<string, string> = {
     free: 'badge-success',
     freemium: 'badge-info',
     paid: 'badge-warning',

@@ -11,7 +11,7 @@ import {
   ChevronRight 
 } from 'lucide-react';
 import { useState } from 'react';
-import { cn } from '../utils/cn';
+import { cn } from '../../utils/cn';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },

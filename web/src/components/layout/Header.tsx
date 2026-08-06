@@ -4,7 +4,6 @@
 import { Link, useNavigate } from '@tanstack/react-router';
 import { Menu, Bell, Moon, Sun, LogOut, User, ChevronDown } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
-import { cn } from '../../utils/cn';
 import { useAuthStore } from '../../hooks/useAuthStore';
 
 export function Header() {

@@ -32,7 +32,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       
       try {
-        const { useAuthStore } = await import('./hooks/useAuthStore');
+        const { useAuthStore } = await import('../hooks/useAuthStore');
         const refreshed = await useAuthStore.getState().refreshAccessToken();
         
         if (refreshed) {

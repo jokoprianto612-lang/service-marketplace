@@ -1,0 +1,30 @@
+name = "service-marketplace-api"
+main = "src/index.ts"
+compatibility_date = "2024-08-06"
+compatibility_flags = ["nodejs_compat"]
+
+[build]
+command = "npm run build"
+
+[vars]
+NODE_ENV = "production"
+JWT_SECRET = "your-secret-here"
+JWT_EXPIRES_IN = "7d"
+DATABASE_URL = "your-database-url"
+REDIS_URL = "your-redis-url"
+DOCKER_HOST = "unix:///var/run/docker.sock"
+LOG_LEVEL = "info"
+FRONTEND_URL = "https://your-pages-domain.pages.dev"
+APP_URL = "https://api.yourdomain.com"
+PORT = "3000"
+CATALOG_PATH = "/app/catalog"
+
+# For Workers AI / Vectorize / D1 / KV / R2 bindings, add:
+# [[kv_namespaces]]
+# binding = "CACHE"
+# id = "your-kv-namespace-id"
+
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "service-marketplace"
+# database_id = "your-d1-id"

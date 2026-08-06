@@ -14,6 +14,10 @@ export default defineConfig({
       '@svcmarket/shared-constants': path.resolve(__dirname, '../shared/constants/src'),
     },
   },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react/jsx-runtime'],
+    dedupe: ['react', 'react-dom'],
+  },
   server: {
     port: 5173,
     host: true,

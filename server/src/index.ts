@@ -2,22 +2,31 @@
 // Server Entry Point - Service Marketplace API
 // ─────────────────────────────────────────────
 import Fastify from 'fastify';
+import { PrismaClient } from '@prisma/client';
 import { config } from './config';
 import { registerPlugins } from './plugins';
 import { registerRoutes } from './routes';
 import { setupSocketIO } from './socket';
+import { startDeploymentWorker } from './services/job-queue';
+
+const prisma = new PrismaClient({
+  log: config.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+});
 
 async function main() {
   const app = Fastify({
     logger: {
-      level: config.logLevel,
-      transport: config.nodeEnv === 'development' ? {
+      level: config.LOG_LEVEL,
+      transport: config.NODE_ENV === 'development' ? {
         target: 'pino-pretty',
         options: { colorize: true, translateTime: 'HH:MM:ss Z', ignore: 'pid,hostname' }
       } : undefined
     },
     ajv: { customOptions: { removeAdditional: 'all', coerceTypes: 'array' } }
   });
+
+  // Decorate Prisma client
+  app.decorate('prisma', prisma);
 
   // Register plugins (cors, helmet, jwt, swagger, etc.)
   await registerPlugins(app);
@@ -27,6 +36,9 @@ async function main() {
 
   // Setup Socket.IO for real-time features
   setupSocketIO(app);
+
+  // Start background job worker
+  startDeploymentWorker(app);
 
   // Health check
   app.get('/health', async () => ({ status: 'ok', timestamp: new Date().toISOString() }));
@@ -41,7 +53,7 @@ async function main() {
   // Global error handler
   app.setErrorHandler((error, request, reply) => {
     request.log.error(error);
-    
+
     if (error.validation) {
       return reply.status(400).send({
         success: false,
@@ -77,23 +89,31 @@ async function main() {
     });
   });
 
+  // Graceful shutdown
+  const shutdown = async (signal: string) => {
+    app.log.info(`${signal} received, shutting down gracefully...`);
+    
+    // Close Prisma connection
+    await prisma.$disconnect();
+    
+    // Close Fastify
+    await app.close();
+    
+    process.exit(0);
+  };
+
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
+
   try {
-    await app.listen({ port: config.port, host: '0.0.0.0' });
-    app.log.info(`🚀 Server running on http://0.0.0.0:${config.port}`);
-    app.log.info(`📚 API Docs: http://0.0.0.0:${config.port}/docs`);
+    await app.listen({ port: config.PORT, host: '0.0.0.0' });
+    app.log.info(`🚀 Server running on http://0.0.0.0:${config.PORT}`);
+    app.log.info(`📚 API Docs: http://0.0.0.0:${config.PORT}/docs`);
+    app.log.info(`🔌 WebSocket: ws://0.0.0.0:${config.PORT}/ws`);
   } catch (err) {
     app.log.error(err);
     process.exit(1);
   }
 }
-
-// Graceful shutdown
-const shutdown = async (signal: string) => {
-  console.log(`\n${signal} received, shutting down gracefully...`);
-  process.exit(0);
-};
-
-process.on('SIGTERM', () => shutdown('SIGTERM'));
-process.on('SIGINT', () => shutdown('SIGINT'));
 
 main();

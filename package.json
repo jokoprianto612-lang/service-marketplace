@@ -3,12 +3,6 @@
   "version": "1.0.0",
   "description": "Self-hosted Service Marketplace Platform - Deploy managed services on your own infrastructure",
   "private": true,
-  "workspaces": [
-    "server",
-    "web",
-    "worker",
-    "shared/*"
-  ],
   "scripts": {
     "setup": "pnpm install && pnpm --filter @svcmarket/server run db:generate",
     "dev": "concurrently \"pnpm --filter @svcmarket/server run dev\" \"pnpm --filter @svcmarket/web run dev\" \"pnpm --filter @svcmarket/worker run dev\"",
