@@ -1,8 +1,10 @@
 // ─────────────────────────────────────────────
-// Marketplace Page
+// Marketplace Page - Service Marketplace
+// Pattern: Marketplace / Directory
+// Style: Vibrant & Block-based
 // ─────────────────────────────────────────────
 import { Link, useSearch } from '@tanstack/react-router';
-import { Search, Box, Database, Activity, HardDrive, Globe, Shield, User, Terminal, GitBranch, Search as SearchIcon, Layers, Zap, Brain } from 'lucide-react';
+import { Search, Box, Database, Activity, HardDrive, Globe, Shield, User, Terminal, GitBranch, Search as SearchIcon, Zap, Brain } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '../../utils/cn';
 
@@ -158,70 +160,104 @@ export function MarketplacePage() {
     return matchesQuery && matchesCategory;
   });
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
-
   return (
     <div className="section animate-in">
-      {/* Header */}
-      <div className="section-header">
-        <div>
-          <h1 className="text-display-sm font-bold text-white">Marketplace</h1>
-          <p className="section-subtitle">Discover and deploy services instantly</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <button className="btn-secondary">
-            <Layers className="h-4 w-4" aria-hidden="true" />
-            Stacks
-          </button>
-        </div>
-      </div>
-
-      {/* Search & Filters */}
-      <div className="card p-4">
-        <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-dark-500" aria-hidden="true" />
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search services..."
-              className="input pl-12"
-            />
+      {/* Hero Section - Search focused per design system */}
+      <section className="py-12 lg:py-16 animate-in">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <h1 className="text-display-lg font-bold text-canvas-900 dark:text-canvas-50 mb-4">
+              Marketplace
+            </h1>
+            <p className="text-body-lg text-canvas-500 dark:text-canvas-400 mb-8">
+              Discover and deploy services instantly. Search, deploy, and manage your infrastructure.
+            </p>
+            {/* Hero Search Bar - Primary CTA per design system */}
+            <div className="relative max-w-2xl mx-auto">
+              <Search className="absolute left-5 top-1/2 h-6 w-6 -translate-y-1/2 text-primary-400" aria-hidden="true" />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search services, databases, tools..."
+                className="input pl-14 pr-12 py-4 text-lg rounded-xl bg-white/80 dark:bg-canvas-800/80 border border-canvas-200 dark:border-canvas-700 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              />
+              <button className="absolute right-3 top-1/2 -translate-y-1/2 btn-primary px-6 py-2.5 text-sm font-medium">
+                Search
+              </button>
+            </div>
           </div>
+        </div>
+      </section>
 
-          <div className="flex items-center gap-2">
+      {/* Categories Section - Per Marketplace pattern */}
+      <section className="mb-16 animate-in">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-display-sm font-bold text-canvas-900 dark:text-canvas-50">Categories</h2>
+            <p className="text-body-md text-canvas-500 dark:text-canvas-400 mt-1">Explore services by category</p>
+          </div>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+          {categories.map((cat, index) => (
+            <Link
+              key={cat.id}
+              to={cat.id === 'all' ? '/marketplace' : `/marketplace?category=${cat.id}`}
+              className={cn(
+                'card-elevated p-6 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1',
+                selectedCategory === cat.id ? 'ring-2 ring-primary-500' : '',
+                `stagger-${index + 1}`
+              )}
+              style={{ animationDelay: `${index * 60}ms` }}
+            >
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 mx-auto mb-4">
+                <cat.icon className="h-7 w-7" aria-hidden="true" />
+              </div>
+              <h3 className="text-heading-sm font-semibold text-canvas-900 dark:text-canvas-50 mb-1">{cat.name}</h3>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Services Grid/List */}
+      <section className="animate-in">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+          <div>
+            <h2 className="text-display-sm font-bold text-canvas-900 dark:text-canvas-50">Services</h2>
+            <p className="text-canvas-500 dark:text-canvas-400 mt-1">
+              {filteredServices.length} {filteredServices.length === 1 ? 'service' : 'services'} found
+            </p>
+          </div>
+          <div className="flex items-center gap-3 mt-4 sm:mt-0">
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="input w-auto min-w-[180px] appearance-none bg-dark-800"
+              className="input w-auto min-w-[180px] appearance-none bg-canvas-100 dark:bg-canvas-800"
             >
               {categories.map((cat) => (
                 <option key={cat.id} value={cat.id}>{cat.name}</option>
               ))}
             </select>
 
-            <div className="flex border border-dark-700 rounded-md overflow-hidden">
+            <div className="flex border border-canvas-200 dark:border-canvas-700 rounded-xl overflow-hidden">
               <button
                 type="button"
                 onClick={() => setViewMode('grid')}
-                className={cn('p-2 transition-colors', viewMode === 'grid' ? 'bg-dark-700 text-white' : 'text-dark-400 hover:text-white')}
+                className={cn('p-3 transition-colors', viewMode === 'grid' ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400' : 'text-canvas-400 hover:text-canvas-600 dark:hover:text-canvas-300')}
                 aria-label="Grid view"
                 aria-pressed={viewMode === 'grid'}
               >
                 <div className="grid grid-cols-2 gap-1 h-5 w-5">
-                  <div className="bg-dark-600 rounded" />
-                  <div className="bg-dark-600 rounded" />
-                  <div className="bg-dark-600 rounded" />
-                  <div className="bg-dark-600 rounded" />
+                  <div className="bg-canvas-300 dark:bg-canvas-600 rounded" />
+                  <div className="bg-canvas-300 dark:bg-canvas-600 rounded" />
+                  <div className="bg-canvas-300 dark:bg-canvas-600 rounded" />
+                  <div className="bg-canvas-300 dark:bg-canvas-600 rounded" />
                 </div>
               </button>
               <button
                 type="button"
                 onClick={() => setViewMode('list')}
-                className={cn('p-2 transition-colors', viewMode === 'list' ? 'bg-dark-700 text-white' : 'text-dark-400 hover:text-white')}
+                className={cn('p-3 transition-colors', viewMode === 'list' ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400' : 'text-canvas-400 hover:text-canvas-600 dark:hover:text-canvas-300')}
                 aria-label="List view"
                 aria-pressed={viewMode === 'list'}
               >
@@ -231,32 +267,32 @@ export function MarketplacePage() {
               </button>
             </div>
           </div>
-        </form>
-      </div>
-
-      {/* Services Grid/List */}
-      <div className={cn(
-        viewMode === 'grid'
-          ? 'grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-          : 'space-y-3'
-      )}>
-        {filteredServices.map((service) => (
-          <ServiceCard key={service.id} service={service} mode={viewMode} />
-        ))}
-      </div>
-
-      {filteredServices.length === 0 && (
-        <div className="empty-state">
-          <Search className="empty-state-icon h-12 w-12" aria-hidden="true" />
-          <h3 className="empty-state-title">No services found</h3>
-          <p className="empty-state-description">Try adjusting your search or filters</p>
         </div>
-      )}
+
+        {/* Services Grid/List */}
+        <div className={cn(
+          viewMode === 'grid'
+            ? 'grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+            : 'space-y-4'
+        )}>
+          {filteredServices.map((service, index) => (
+            <ServiceCard key={service.id} service={service} mode={viewMode} index={index} />
+          ))}
+        </div>
+
+        {filteredServices.length === 0 && (
+          <div className="text-center py-16 animate-in">
+            <Search className="h-16 w-16 text-canvas-300 dark:text-canvas-600 mx-auto mb-4" aria-hidden="true" />
+            <h3 className="text-heading-md font-medium text-canvas-900 dark:text-canvas-50 mb-2">No services found</h3>
+            <p className="text-canvas-500 dark:text-canvas-400">Try adjusting your search or filters</p>
+          </div>
+        )}
+      </section>
     </div>
   );
 }
 
-function ServiceCard({ service, mode }: { service: typeof services[0]; mode: 'grid' | 'list' }) {
+function ServiceCard({ service, mode, index }: { service: typeof services[0]; mode: 'grid' | 'list'; index: number }) {
   const maturityColors: Record<string, string> = {
     stable: 'badge-success',
     beta: 'badge-warning',
@@ -273,14 +309,17 @@ function ServiceCard({ service, mode }: { service: typeof services[0]; mode: 'gr
     return (
       <Link
         to={`/marketplace/${service.id}`}
-        className="card-hover flex items-center gap-4 p-4 group"
+        className="card-elevated flex items-center gap-5 p-5 group transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
+        style={{ animationDelay: `${index * 60}ms` }}
       >
-        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-dark-800 text-2xl shrink-0">
+        <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-900/30 text-3xl shrink-0">
           {service.icon}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="font-semibold text-white truncate">{service.name}</h3>
+          <div className="flex items-center gap-2 flex-wrap mb-2">
+            <h3 className="font-semibold text-canvas-900 dark:text-canvas-50 truncate group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+              {service.name}
+            </h3>
             <span className={cn('badge', maturityColors[service.maturity])}>
               {service.maturity}
             </span>
@@ -288,13 +327,13 @@ function ServiceCard({ service, mode }: { service: typeof services[0]; mode: 'gr
               {service.pricing}
             </span>
           </div>
-          <p className="text-body-sm text-dark-400 mt-1 truncate">{service.description}</p>
-          <div className="flex items-center gap-3 mt-2 text-caption text-dark-500">
-            <span>v{service.version}</span>
+          <p className="text-body-sm text-canvas-500 dark:text-canvas-400 mb-3 line-clamp-2">{service.description}</p>
+          <div className="flex items-center gap-3 text-caption text-canvas-500">
+            <span className="font-mono">v{service.version}</span>
             <span>⭐ {service.stars.toLocaleString()}</span>
           </div>
         </div>
-        <button className="btn-primary shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+        <button className="btn-primary shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           Deploy
         </button>
       </Link>
@@ -302,10 +341,10 @@ function ServiceCard({ service, mode }: { service: typeof services[0]; mode: 'gr
   }
 
   return (
-    <Link to={`/marketplace/${service.id}`} className="card-hover flex flex-col h-full">
-      <div className="p-5">
+    <Link to={`/marketplace/${service.id}`} className="card-elevated flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1" style={{ animationDelay: `${index * 80}ms` }}>
+      <div className="p-6">
         <div className="flex items-start justify-between mb-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-dark-800 text-2xl">
+          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-900/30 text-3xl">
             {service.icon}
           </div>
           <div className="flex items-center gap-1">
@@ -314,10 +353,10 @@ function ServiceCard({ service, mode }: { service: typeof services[0]; mode: 'gr
             </span>
           </div>
         </div>
-        <h3 className="font-semibold text-white mb-1 group-hover:text-primary-400 transition-colors">
+        <h3 className="font-semibold text-canvas-900 dark:text-canvas-50 mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
           {service.name}
         </h3>
-        <p className="text-body-sm text-dark-400 mb-4 line-clamp-2">{service.description}</p>
+        <p className="text-body-sm text-canvas-500 dark:text-canvas-400 mb-4 line-clamp-2">{service.description}</p>
         <div className="flex flex-wrap gap-1.5 mb-4">
           {service.tags.slice(0, 3).map((tag) => (
             <span key={tag} className="badge badge-neutral">{tag}</span>
@@ -327,18 +366,18 @@ function ServiceCard({ service, mode }: { service: typeof services[0]; mode: 'gr
           )}
         </div>
       </div>
-      <div className="border-t border-dark-800 p-5 pt-4">
+      <div className="border-t border-canvas-200 dark:border-canvas-700 p-6 pt-5">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-caption text-dark-500">
+          <div className="flex items-center gap-2 text-caption text-canvas-500">
             <span className="font-mono">v{service.version}</span>
-            <span className="text-dark-600">·</span>
+            <span className="text-canvas-600">·</span>
             <span>⭐ {service.stars.toLocaleString()}</span>
           </div>
           <span className={cn('badge', pricingColors[service.pricing])}>
             {service.pricing === 'free' ? 'Free' : service.pricing}
           </span>
         </div>
-        <button className="btn-primary w-full mt-3">Deploy</button>
+        <button className="btn-primary w-full mt-4">Deploy</button>
       </div>
     </Link>
   );
