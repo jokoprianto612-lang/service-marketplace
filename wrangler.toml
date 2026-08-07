@@ -1,0 +1,25 @@
+name = "okongzinc-svcmarket-worker"
+main = "worker/dist/worker.js"
+compatibility_date = "2024-08-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[kv_namespaces]]
+binding = "JOBS_KV"
+id = "4aec366fb79e4604a7b6dce4c94226df"
+preview_id = "4aec366fb79e4604a7b6dce4c94226df"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "svcmarket"
+database_id = "7920572c-8b53-4e53-99db-1fdd41f4a6fc"
+
+[vars]
+NODE_ENV = "production"
+API_URL = "https://api.okongzinc.com"
+FRONTEND_URL = "https://okongzinc.com"
+
+[triggers]
+crons = ["* * * * *"]
+
+[observability]
+enabled = true
