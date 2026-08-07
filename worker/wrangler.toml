@@ -9,13 +9,13 @@ binding = "ASSETS"
 
 [[kv_namespaces]]
 binding = "JOBS_KV"
-id = "your-production-kv-id"
-preview_id = "your-preview-kv-id"
+id = "4aec366fb79e4604a7b6dce4c94226df"
+preview_id = "4aec366fb79e4604a7b6dce4c94226df"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "svcmarket"
-database_id = "your-d1-database-id"
+database_id = "7920572c-8b53-4e53-99db-1fdd41f4a6fc"
 
 [vars]
 NODE_ENV = "production"
