@@ -1,11 +1,7 @@
 name = "okongzinc-svcmarket-worker"
-main = "src/worker.ts"
+main = "dist/worker.js"
 compatibility_date = "2024-08-01"
 compatibility_flags = ["nodejs_compat"]
-
-[assets]
-directory = "../web/dist"
-binding = "ASSETS"
 
 [[kv_namespaces]]
 binding = "JOBS_KV"
