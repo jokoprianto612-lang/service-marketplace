@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { requireAuth } from '../middleware/auth';
 import { notFound, badRequest } from '../utils/errors';
+import type { Env } from '../types';
 
 const deploySchema = z.object({
   definitionId: z.string(),

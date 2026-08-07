@@ -2,16 +2,20 @@
 // Header Component
 // ─────────────────────────────────────────────
 import { Link, useNavigate } from '@tanstack/react-router';
-import { Menu, Bell, Moon, Sun, LogOut, User, ChevronDown } from 'lucide-react';
+import { Menu, Bell, Sun, Moon, LogOut, User, ChevronDown } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useAuthStore } from '../../hooks/useAuthStore';
+import { useTheme } from '../../context/ThemeContext';
+import { LanguageSelector } from './LanguageSelector';
+import { useI18n } from '../../context/I18nContext';
 
 export function Header() {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
+  const { theme, toggleTheme } = useTheme();
+  const { t } = useI18n();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -36,7 +40,7 @@ export function Header() {
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="lg:hidden p-2 rounded-md text-dark-400 hover:bg-dark-800 hover:text-dark-100 transition-colors"
-          aria-label="Toggle menu"
+          aria-label={t('nav.menu') || 'Toggle menu'}
           aria-expanded={mobileMenuOpen}
         >
           <Menu className="h-6 w-6" aria-hidden="true" />
@@ -45,14 +49,17 @@ export function Header() {
         {/* Page title - hidden on mobile */}
         <div className="hidden lg:block flex-1">
           <h1 className="text-heading-sm font-semibold text-white truncate">
-            Service Marketplace
+            {t('nav.title') || 'Service Marketplace'}
           </h1>
         </div>
 
         {/* Right side actions */}
         <div className="flex items-center gap-2 lg:gap-4">
+          {/* Language Selector */}
+          <LanguageSelector />
+
           {/* Notifications */}
-          <button className="relative p-2 rounded-md text-dark-400 hover:bg-dark-800 hover:text-dark-100 transition-colors" aria-label="Notifications">
+          <button className="relative p-2 rounded-md text-dark-400 hover:bg-dark-800 hover:text-dark-100 transition-colors" aria-label={t('header.notifications')}>
             <Bell className="h-5 w-5" aria-hidden="true" />
             <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-error-500 text-xs text-white">
               3
@@ -61,11 +68,11 @@ export function Header() {
 
           {/* Theme toggle */}
           <button
-            onClick={() => setDarkMode(!darkMode)}
+            onClick={toggleTheme}
             className="p-2 rounded-md text-dark-400 hover:bg-dark-800 hover:text-dark-100 transition-colors"
-            aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            aria-label={theme === 'dark' ? t('header.lightMode') : t('header.darkMode')}
           >
-            {darkMode ? <Sun className="h-5 w-5" aria-hidden="true" /> : <Moon className="h-5 w-5" aria-hidden="true" />}
+            {theme === 'dark' ? <Sun className="h-5 w-5" aria-hidden="true" /> : <Moon className="h-5 w-5" aria-hidden="true" />}
           </button>
 
           {/* User menu */}
@@ -80,7 +87,7 @@ export function Header() {
                 <User className="h-5 w-5 text-white" aria-hidden="true" />
               </div>
               <span className="hidden lg:block text-sm font-medium text-dark-100">
-                {user?.name || 'User'}
+                {user?.name || t('header.user') || 'User'}
               </span>
               <ChevronDown className="hidden lg:block h-4 w-4 text-dark-400" aria-hidden="true" />
             </button>
@@ -88,7 +95,7 @@ export function Header() {
             {userMenuOpen && (
               <div className="dropdown">
                 <div className="px-4 py-3 border-b border-dark-800">
-                  <p className="text-sm font-medium text-white">{user?.name || 'User'}</p>
+                  <p className="text-sm font-medium text-white">{user?.name || t('header.user') || 'User'}</p>
                   <p className="text-xs text-dark-400 truncate">{user?.email}</p>
                 </div>
                 <Link
@@ -97,14 +104,14 @@ export function Header() {
                   onClick={() => setUserMenuOpen(false)}
                 >
                   <User className="h-4 w-4" aria-hidden="true" />
-                  Profile
+                  {t('nav.settings') || 'Profile'}
                 </Link>
                 <button
                   onClick={handleLogout}
                   className="dropdown-item text-error-400 hover:text-error-300"
                 >
                   <LogOut className="h-4 w-4" aria-hidden="true" />
-                  Sign out
+                  {t('header.signOut') || 'Sign out'}
                 </button>
               </div>
             )}

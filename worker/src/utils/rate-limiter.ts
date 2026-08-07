@@ -2,6 +2,7 @@
 // Rate Limiter - Cloudflare Worker (using KV)
 // ─────────────────────────────────────────────
 import { MiddlewareHandler } from 'hono';
+import type { Env } from '../types';
 
 interface RateLimitConfig {
   windowMs: number;

@@ -7,8 +7,10 @@ import { Toaster } from 'react-hot-toast';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
 import { useAuthStore } from './hooks/useAuthStore';
+import { ThemeProvider } from './context/ThemeContext';
+import { I18nProvider } from './context/I18nContext';
 
-export function App() {
+function AppContent() {
   const { isAuthenticated, checkAuth } = useAuthStore();
 
   // Check auth on mount
@@ -17,7 +19,7 @@ export function App() {
   }, [checkAuth]);
 
   return (
-    <div className="min-h-screen bg-dark-950 dark:bg-dark-950">
+    <div className="min-h-screen bg-background dark:bg-dark-950">
       <Toaster
         position="top-right"
         toastOptions={{
@@ -40,5 +42,15 @@ export function App() {
       )}
       {!isAuthenticated && <Outlet />}
     </div>
+  );
+}
+
+export function App() {
+  return (
+    <ThemeProvider>
+      <I18nProvider defaultLocale="en">
+        <AppContent />
+      </I18nProvider>
+    </ThemeProvider>
   );
 }

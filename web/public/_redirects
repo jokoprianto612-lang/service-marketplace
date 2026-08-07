@@ -1,6 +1,1 @@
-/* SPA routing for Cloudflare Pages */
-/* Redirect all non-asset requests to index.html */
-[[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
+/* /index.html 200

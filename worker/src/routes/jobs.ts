@@ -3,6 +3,7 @@
 // ─────────────────────────────────────────────
 import { Hono } from 'hono';
 import { requireAuth } from '../middleware/auth';
+import type { Env } from '../types';
 
 export const jobRoutes = new Hono<{ Bindings: Env; Variables: { user: any } }>();
 

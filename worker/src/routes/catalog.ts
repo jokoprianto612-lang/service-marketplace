@@ -5,6 +5,7 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { notFound } from '../utils/errors';
+import type { Env } from '../types';
 
 const searchSchema = z.object({
   q: z.string().optional(),
@@ -23,13 +24,14 @@ catalogRoutes.get('/', zValidator('query', searchSchema), async (c) => {
   const { q, category, maturity, pricing, tags, page, limit } = c.req.valid('query');
   
   // For now, return static catalog (later from KV/D1)
+  // icon field now contains the service ID for frontend BrandIcon lookup
   const services = [
     {
       id: 'n8n-workflow',
       name: 'n8n Workflow Automation',
       description: 'Extendable workflow automation tool with 400+ integrations',
       category: 'automation',
-      icon: '⚡',
+      icon: 'n8n-workflow',
       version: '1.42.0',
       maturity: 'stable',
       pricing: 'free',
@@ -41,7 +43,7 @@ catalogRoutes.get('/', zValidator('query', searchSchema), async (c) => {
       name: 'Hermes AI Agent',
       description: 'Self-improving AI agent by Nous Research with skills & memory',
       category: 'ai-ml',
-      icon: '🤖',
+      icon: 'hermes-ai-agent',
       version: '1.0.0',
       maturity: 'beta',
       pricing: 'free',
@@ -53,7 +55,7 @@ catalogRoutes.get('/', zValidator('query', searchSchema), async (c) => {
       name: 'PostgreSQL',
       description: 'Advanced open source relational database',
       category: 'databases',
-      icon: '🗄️',
+      icon: 'postgresql',
       version: '16.0',
       maturity: 'stable',
       pricing: 'free',
@@ -65,7 +67,7 @@ catalogRoutes.get('/', zValidator('query', searchSchema), async (c) => {
       name: 'Redis',
       description: 'In-memory data structure store, cache, and message broker',
       category: 'databases',
-      icon: '🔴',
+      icon: 'redis',
       version: '7.2',
       maturity: 'stable',
       pricing: 'free',
@@ -77,12 +79,72 @@ catalogRoutes.get('/', zValidator('query', searchSchema), async (c) => {
       name: 'Grafana + Prometheus',
       description: 'Complete observability stack with dashboards',
       category: 'monitoring',
-      icon: '📊',
+      icon: 'grafana-prometheus',
       version: '11.0',
       maturity: 'stable',
       pricing: 'free',
       tags: ['metrics', 'dashboards', 'alerting'],
       stars: 25000,
+    },
+    {
+      id: 'minio',
+      name: 'MinIO',
+      description: 'High-performance S3-compatible object storage',
+      category: 'storage',
+      icon: 'minio',
+      version: '2024.01',
+      maturity: 'stable',
+      pricing: 'free',
+      tags: ['s3', 'object-storage', 'distributed'],
+      stars: 38000,
+    },
+    {
+      id: 'nginx-proxy-manager',
+      name: 'Nginx Proxy Manager',
+      description: 'Reverse proxy with SSL management UI',
+      category: 'networking',
+      icon: 'nginx-proxy-manager',
+      version: '2.10',
+      maturity: 'stable',
+      pricing: 'free',
+      tags: ['reverse-proxy', 'ssl', 'letsencrypt'],
+      stars: 18000,
+    },
+    {
+      id: 'authentik',
+      name: 'Authentik',
+      description: 'Open source identity provider with OIDC/SAML',
+      category: 'identity',
+      icon: 'authentik',
+      version: '2024.01',
+      maturity: 'stable',
+      pricing: 'free',
+      tags: ['oidc', 'saml', 'sso', 'ldap'],
+      stars: 11000,
+    },
+    {
+      id: 'vaultwarden',
+      name: 'Vaultwarden',
+      description: 'Bitwarden-compatible password manager',
+      category: 'security',
+      icon: 'vaultwarden',
+      version: '1.32',
+      maturity: 'stable',
+      pricing: 'free',
+      tags: ['password-manager', 'bitwarden', 'e2e-encryption'],
+      stars: 30000,
+    },
+    {
+      id: 'portainer',
+      name: 'Portainer',
+      description: 'Docker management UI for containers and stacks',
+      category: 'developer-tools',
+      icon: 'portainer',
+      version: '2.21',
+      maturity: 'stable',
+      pricing: 'free',
+      tags: ['docker', 'management', 'ui'],
+      stars: 28000,
     },
   ];
 
@@ -125,18 +187,19 @@ catalogRoutes.get('/', zValidator('query', searchSchema), async (c) => {
 });
 
 // GET /catalog/categories - List categories
+// Categories use Lucide icon names for frontend rendering
 catalogRoutes.get('/categories', async (c) => {
   const categories = [
-    { id: 'automation', name: 'Automation', icon: '⚡', count: 3 },
-    { id: 'ai-ml', name: 'AI/ML', icon: '🤖', count: 2 },
-    { id: 'databases', name: 'Databases', icon: '🗄️', count: 5 },
-    { id: 'monitoring', name: 'Monitoring', icon: '📊', count: 4 },
-    { id: 'storage', name: 'Storage', icon: '💾', count: 3 },
-    { id: 'networking', name: 'Networking', icon: '🌐', count: 3 },
-    { id: 'security', name: 'Security', icon: '🔒', count: 3 },
-    { id: 'identity', name: 'Identity', icon: '👤', count: 2 },
-    { id: 'developer-tools', name: 'Developer Tools', icon: '🛠️', count: 4 },
-    { id: 'ci-cd', name: 'CI/CD', icon: '🔄', count: 2 },
+    { id: 'automation', name: 'Automation', icon: 'zap', count: 3 },
+    { id: 'ai-ml', name: 'AI/ML', icon: 'brain', count: 2 },
+    { id: 'databases', name: 'Databases', icon: 'database', count: 5 },
+    { id: 'monitoring', name: 'Monitoring', icon: 'activity', count: 4 },
+    { id: 'storage', name: 'Storage', icon: 'hard-drive', count: 3 },
+    { id: 'networking', name: 'Networking', icon: 'globe', count: 3 },
+    { id: 'security', name: 'Security', icon: 'shield', count: 3 },
+    { id: 'identity', name: 'Identity', icon: 'user', count: 2 },
+    { id: 'developer-tools', name: 'Developer Tools', icon: 'terminal', count: 4 },
+    { id: 'ci-cd', name: 'CI/CD', icon: 'git-branch', count: 2 },
   ];
 
   return c.json({ success: true, data: categories });
@@ -154,7 +217,7 @@ catalogRoutes.get('/:id', async (c) => {
       description: 'Extendable workflow automation tool with 400+ integrations',
       longDescription: '# n8n Workflow Automation\n\n[n8n](https://n8n.io/) is a fair-code workflow automation tool...',
       category: 'automation',
-      icon: '⚡',
+      icon: 'n8n-workflow',
       version: '1.42.0',
       maintainer: 'n8n-io',
       repository: 'https://github.com/n8n-io/n8n',

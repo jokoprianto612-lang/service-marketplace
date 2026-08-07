@@ -7,6 +7,7 @@ import { Link, useSearch } from '@tanstack/react-router';
 import { Search, Box, Database, Activity, HardDrive, Globe, Shield, User, Terminal, GitBranch, Search as SearchIcon, Zap, Brain } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '../../utils/cn';
+import { BrandIcon, getCategoryFallbackIcon } from '../../components/icons/BrandIcon';
 
 const categories = [
   { id: 'all', name: 'All', icon: Box },
@@ -29,7 +30,6 @@ const services = [
     name: 'n8n Workflow Automation',
     description: 'Extendable workflow automation tool with 400+ integrations',
     category: 'automation',
-    icon: '⚡',
     version: '1.42.0',
     maturity: 'stable',
     pricing: 'free',
@@ -41,7 +41,6 @@ const services = [
     name: 'Hermes AI Agent',
     description: 'Self-improving AI agent by Nous Research with skills & memory',
     category: 'ai-ml',
-    icon: '🤖',
     version: '1.0.0',
     maturity: 'beta',
     pricing: 'free',
@@ -53,7 +52,6 @@ const services = [
     name: 'PostgreSQL',
     description: 'Advanced open source relational database',
     category: 'databases',
-    icon: '🗄️',
     version: '16.0',
     maturity: 'stable',
     pricing: 'free',
@@ -65,7 +63,6 @@ const services = [
     name: 'Redis',
     description: 'In-memory data structure store, cache, and message broker',
     category: 'databases',
-    icon: '🔴',
     version: '7.2',
     maturity: 'stable',
     pricing: 'free',
@@ -77,7 +74,6 @@ const services = [
     name: 'Grafana + Prometheus',
     description: 'Complete observability stack with dashboards',
     category: 'monitoring',
-    icon: '📊',
     version: '11.0',
     maturity: 'stable',
     pricing: 'free',
@@ -89,7 +85,6 @@ const services = [
     name: 'MinIO',
     description: 'High-performance S3-compatible object storage',
     category: 'storage',
-    icon: '💾',
     version: '2024.01',
     maturity: 'stable',
     pricing: 'free',
@@ -101,7 +96,6 @@ const services = [
     name: 'Nginx Proxy Manager',
     description: 'Reverse proxy with SSL management UI',
     category: 'networking',
-    icon: '🌐',
     version: '2.10',
     maturity: 'stable',
     pricing: 'free',
@@ -113,7 +107,6 @@ const services = [
     name: 'Authentik',
     description: 'Open source identity provider with OIDC/SAML',
     category: 'identity',
-    icon: '👤',
     version: '2024.01',
     maturity: 'stable',
     pricing: 'free',
@@ -125,7 +118,6 @@ const services = [
     name: 'Vaultwarden',
     description: 'Bitwarden-compatible password manager',
     category: 'security',
-    icon: '🔒',
     version: '1.32',
     maturity: 'stable',
     pricing: 'free',
@@ -137,7 +129,6 @@ const services = [
     name: 'Portainer',
     description: 'Docker management UI for containers and stacks',
     category: 'developer-tools',
-    icon: '🐳',
     version: '2.21',
     maturity: 'stable',
     pricing: 'free',
@@ -305,6 +296,8 @@ function ServiceCard({ service, mode, index }: { service: typeof services[0]; mo
     paid: 'badge-warning',
   };
 
+  const iconSize = mode === 'list' ? 36 : 32;
+
   if (mode === 'list') {
     return (
       <Link
@@ -312,8 +305,8 @@ function ServiceCard({ service, mode, index }: { service: typeof services[0]; mo
         className="card-elevated flex items-center gap-5 p-5 group transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
         style={{ animationDelay: `${index * 60}ms` }}
       >
-        <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-900/30 text-3xl shrink-0">
-          {service.icon}
+        <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-900/30 shrink-0">
+          <BrandIcon serviceId={service.id} size={iconSize} fallback={getCategoryFallbackIcon(service.category)} />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-2">
@@ -344,8 +337,8 @@ function ServiceCard({ service, mode, index }: { service: typeof services[0]; mo
     <Link to={`/marketplace/${service.id}`} className="card-elevated flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1" style={{ animationDelay: `${index * 80}ms` }}>
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-900/30 text-3xl">
-            {service.icon}
+          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-900/30">
+            <BrandIcon serviceId={service.id} size={iconSize} fallback={getCategoryFallbackIcon(service.category)} />
           </div>
           <div className="flex items-center gap-1">
             <span className={cn('badge', maturityColors[service.maturity])}>

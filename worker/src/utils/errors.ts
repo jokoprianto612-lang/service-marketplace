@@ -2,31 +2,44 @@
 // Error Handler - Cloudflare Worker
 // ─────────────────────────────────────────────
 import { ErrorHandler } from 'hono';
+import type { Env, Variables } from '../types';
 
-export const errorHandler: ErrorHandler<{ Bindings: Env }> = (err, c) => {
+interface ZodError extends Error {
+  name: 'ZodError';
+  errors: any[];
+}
+
+interface HttpErrorWithStatus extends Error {
+  status: number;
+  code: string;
+}
+
+export const errorHandler: ErrorHandler<{ Bindings: Env; Variables: Variables }> = (err, c) => {
   console.error('Worker error:', err);
 
   // Zod validation errors
   if (err.name === 'ZodError') {
+    const zodErr = err as ZodError;
     return c.json({
       success: false,
       error: {
         code: 'VALIDATION_ERROR',
         message: 'Request validation failed',
-        details: err.errors,
+        details: zodErr.errors,
       },
     }, 400);
   }
 
   // Custom HTTP errors
-  if (err.status) {
+  if ('status' in err && typeof (err as HttpErrorWithStatus).status === 'number') {
+    const httpErr = err as HttpErrorWithStatus;
     return c.json({
       success: false,
       error: {
-        code: err.code || 'ERROR',
-        message: err.message,
+        code: httpErr.code || 'ERROR',
+        message: httpErr.message,
       },
-    }, err.status);
+    }, httpErr.status as any);
   }
 
   // Generic server error

@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { requireAuth } from '../middleware/auth';
 import { notFound } from '../utils/errors';
+import type { Env } from '../types';
 
 const createProjectSchema = z.object({
   name: z.string().min(1).max(100),

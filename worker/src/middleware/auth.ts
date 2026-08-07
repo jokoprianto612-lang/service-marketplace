@@ -3,6 +3,7 @@
 // ─────────────────────────────────────────────
 import { MiddlewareHandler } from 'hono';
 import { verify } from 'hono/jwt';
+import type { Env } from '../types';
 
 export const authMiddleware: MiddlewareHandler<{ Bindings: Env; Variables: { user: any } }> = async (c, next) => {
   const authHeader = c.req.header('Authorization');
@@ -15,7 +16,7 @@ export const authMiddleware: MiddlewareHandler<{ Bindings: Env; Variables: { use
   const token = authHeader.slice(7);
   
   try {
-    const payload = await verify(token, c.env.JWT_SECRET || 'secret');
+    const payload = await verify(token, c.env.JWT_SECRET || 'secret', 'HS256');
     c.set('user', {
       id: payload.sub,
       email: payload.email,

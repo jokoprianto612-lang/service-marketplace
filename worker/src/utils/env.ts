@@ -1,6 +1,8 @@
 // ─────────────────────────────────────────────
 // Environment Validation
 // ─────────────────────────────────────────────
+import type { Env } from '../types';
+
 export function validateEnv(env: Env): void {
   const required = [
     'JOBS_KV',

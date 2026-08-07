@@ -19,25 +19,9 @@ import { errorHandler } from './utils/errors';
 import { rateLimiter } from './utils/rate-limiter';
 import { authMiddleware } from './middleware/auth';
 import { validateEnv } from './utils/env';
+import type { Env, Variables } from './types';
 
-type Bindings = {
-  JOBS_KV: KVNamespace;
-  DB: D1Database;
-  ASSETS: Fetcher;
-  NODE_ENV: string;
-  API_URL: string;
-  FRONTEND_URL: string;
-};
-
-type Variables = {
-  user: {
-    id: string;
-    email: string;
-    roles: string[];
-  } | null;
-};
-
-const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
+const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 
 // Global middleware
 app.use('*', logger());
@@ -53,7 +37,7 @@ app.use('*', cors({
 }));
 
 // Rate limiting
-app.use('/api/*', rateLimiter);
+app.use('/api/*', rateLimiter());
 
 // Health check (no auth)
 app.route('/api/v1', healthRoutes);
@@ -79,9 +63,9 @@ app.onError(errorHandler);
 // Cron trigger for background jobs
 export default {
   fetch: app.fetch,
-  async scheduled(event: ScheduledController, env: Bindings, ctx: ExecutionContext) {
+  async scheduled(event: ScheduledController, env: Env, ctx: ExecutionContext) {
     // Trigger job processing
     const { processPendingJobs } = await import('./services/job-processor');
     ctx.waitUntil(processPendingJobs(env));
   },
-} satisfies ExportedHandler<Bindings>;
+} satisfies ExportedHandler<Env>;
