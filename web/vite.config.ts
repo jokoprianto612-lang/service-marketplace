@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const BUILD_TIMESTAMP = Date.now();
 
 export default defineConfig({
   plugins: [react()],
@@ -38,9 +39,9 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       output: {
-        entryFileNames: `assets/index-[hash]-${Date.now()}.js`,
-        chunkFileNames: `assets/[name]-[hash]-${Date.now()}.js`,
-        assetFileNames: `assets/[name]-[hash]-${Date.now()}.[ext]`,
+        entryFileNames: `assets/index-[hash]-${BUILD_TIMESTAMP}.js`,
+        chunkFileNames: `assets/[name]-[hash]-${BUILD_TIMESTAMP}.js`,
+        assetFileNames: `assets/[name]-[hash]-${BUILD_TIMESTAMP}.[ext]`,
         manualChunks: {
           vendor: ['react', 'react-dom', '@tanstack/react-query', '@tanstack/react-router'],
           ui: ['@headlessui/react', '@heroicons/react'],
@@ -49,7 +50,7 @@ export default defineConfig({
     },
   },
   define: {
-    'import.meta.env.VITE_BUILD_TIMESTAMP': JSON.stringify(Date.now()),
-    'import.meta.env.VITE_BUILD_ID': JSON.stringify(`build-${Date.now()}`),
+    'import.meta.env.VITE_BUILD_TIMESTAMP': JSON.stringify(BUILD_TIMESTAMP),
+    'import.meta.env.VITE_BUILD_ID': JSON.stringify(`build-${BUILD_TIMESTAMP}`),
   },
 });
