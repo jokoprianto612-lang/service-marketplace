@@ -38,6 +38,7 @@ export default defineConfig({
     sourcemap: true,
     emptyOutDir: true,
     cssCodeSplit: true,
+    minify: 'terser',
     rollupOptions: {
       output: {
         entryFileNames: `assets/index-[hash]-${BUILD_TIMESTAMP}.js`,
