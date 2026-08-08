@@ -18,9 +18,12 @@
   "dependencies": {
     "@headlessui/react": "^1.7.0",
     "@heroicons/react": "^2.1.0",
+    "@react-three/drei": "^10.7.8",
+    "@react-three/fiber": "^9.7.0",
     "@remixicon/react": "^4.9.0",
     "@tanstack/react-query": "^5.20.0",
     "@tanstack/react-router": "^1.160.0",
+    "@types/three": "^0.185.4",
     "axios": "^1.6.0",
     "clsx": "^2.1.0",
     "date-fns": "^3.3.0",
@@ -31,6 +34,7 @@
     "react-hot-toast": "^2.4.0",
     "socket.io-client": "^4.7.0",
     "tailwind-merge": "^2.2.0",
+    "three": "^0.185.1",
     "zod": "^3.22.0",
     "zustand": "^5.0.14"
   },

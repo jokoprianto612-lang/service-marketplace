@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────
-// Dashboard Page - NVIDIA Build Style
+// Dashboard Page - NVIDIA Build Style with 3D
 // ─────────────────────────────────────────────
 import {
   Server,
@@ -14,11 +14,13 @@ import {
   MemoryStick,
   Globe,
   Shield,
+  Sparkles,
 } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { cn } from '../../utils/cn';
 import { BrandIcon } from '../../components/icons/BrandIcon';
 import { useI18n } from '../../context/I18nContext';
+import { Hero3D } from '../../components/3d/Scene3D';
 
 const recentServices = [
   { name: 'n8n Workflow', status: 'running', cpu: '12%', memory: '256MB', uptime: '5d 12h', id: 'n8n-workflow' },
@@ -86,6 +88,51 @@ export function DashboardPage() {
               <button className="absolute right-3 top-1/2 -translate-y-1/2 btn-primary px-6 py-2.5 text-sm font-medium">
                 {t('marketplace.searchButton')}
               </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3D Showcase Section */}
+      <section className="mb-16 animate-in">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8">
+          <div className="grid lg:grid-cols-3 gap-6 items-center">
+            <div className="lg:col-span-2">
+              <div className="card-glass-hover p-6 h-full min-h-[300px] relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-purple-500/5 to-amber-500/10" />
+                <Hero3D serviceId="hermes-ai-agent" />
+                <div className="absolute inset-0 flex items-end justify-between p-6 pointer-events-none">
+                  <div>
+                    <span className="badge-info text-sm mb-2">{t('category.ai-ml')}</span>
+                    <h3 className="text-heading-lg font-bold text-white mb-2">Hermes AI Agent</h3>
+                    <p className="text-body-md text-canvas-300">Self-improving AI agent by Nous Research with skills & memory</p>
+                  </div>
+                  <div className="text-right">
+                    <span className="badge-success text-sm">{t('marketplace.maturity.stable')}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="card-glass-hover p-6 text-center">
+              <Sparkles className="h-12 w-12 text-primary-400 mx-auto mb-4" aria-hidden="true" />
+              <h3 className="text-heading-md font-semibold text-white mb-2">3D Experience</h3>
+              <p className="text-body-md text-canvas-400 mb-4">
+                Interactive 3D visualizations powered by React Three Fiber. Explore services in a vibrant, living environment.
+              </p>
+              <div className="flex items-center justify-center gap-4 text-caption text-canvas-400">
+                <span className="flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-full bg-primary-500" />
+                  Indigo
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-full bg-purple-500" />
+                  Purple
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-full bg-amber-500" />
+                  Amber
+                </span>
+              </div>
             </div>
           </div>
         </div>

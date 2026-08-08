@@ -11,6 +11,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -20,8 +21,8 @@
       "@/*": ["src/*"],
       "@svcmarket/shared/*": ["../shared/*"]
     },
-    "types": ["vite/client"]
+    "types": ["vite/client", "react", "react-dom", "react/jsx-runtime", "@react-three/fiber", "@react-three/drei"]
   },
-  "include": ["src"],
+  "include": ["src", "src/**/*", "src/vite-env.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
