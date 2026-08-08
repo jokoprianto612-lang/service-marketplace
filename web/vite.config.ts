@@ -6,7 +6,6 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BUILD_TIMESTAMP = Date.now();
 const BUILD_RANDOM = Math.random().toString(36).substring(2, 9);
-const BUILD_ID = `build-${BUILD_TIMESTAMP}-${BUILD_RANDOM}`;
 
 export default defineConfig({
   plugins: [react()],
@@ -55,7 +54,7 @@ export default defineConfig({
   },
   define: {
     'import.meta.env.VITE_BUILD_TIMESTAMP': JSON.stringify(BUILD_TIMESTAMP),
-    'import.meta.env.VITE_BUILD_ID': JSON.stringify(`build-${BUILD_TIMESTAMP}-${Math.random().toString(36).substring(2, 9)}`),
+    'import.meta.env.VITE_BUILD_ID': JSON.stringify(`build-${BUILD_TIMESTAMP}-${BUILD_RANDOM}`),
     'import.meta.env.VITE_FORCE_REBUILD': 'true',
     'import.meta.env.CF_PAGES_FORCE_REBUILD': 'true',
   },
