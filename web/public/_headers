@@ -1,4 +1,4 @@
-# Force Cloudflare Pages to rebuild with cache busting
+# Force Cloudflare Pages to rebuild - Comprehensive cache busting
 # Disable all caching
 Cache-Control: no-cache, no-store, must-revalidate
 Pragma: no-cache
@@ -8,13 +8,23 @@ Expires: 0
 CF-Pages-Force-Build: true
 CF-Pages-Cache-Bust: true
 
-# Prevent caching of assets
+# Prevent caching of all assets
 /*
   Cache-Control: no-cache, no-store, must-revalidate
   Pragma: no-cache
   Expires: 0
 
 /assets/*
+  Cache-Control: no-cache, no-store, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+
+*.css
+  Cache-Control: no-cache, no-store, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+
+*.js
   Cache-Control: no-cache, no-store, must-revalidate
   Pragma: no-cache
   Expires: 0

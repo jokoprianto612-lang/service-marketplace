@@ -1,11 +1,12 @@
 {
   "name": "@svcmarket/web",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build --mode production --force --emptyOutDir",
+    "build:clean": "rm -rf dist && vite build --mode production --force --emptyOutDir",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
