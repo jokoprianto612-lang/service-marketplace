@@ -29,6 +29,8 @@ const translations: Record<Locale, Record<string, string>> = {
     'nav.settings': 'Settings',
     'nav.login': 'Login',
     'nav.register': 'Register',
+    'nav.menu': 'Menu',
+    'nav.title': 'Wee Wok The Tok',
     
     // Header
     'header.notifications': 'Notifications',
@@ -36,6 +38,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'header.darkMode': 'Switch to dark mode',
     'header.profile': 'Profile',
     'header.signOut': 'Sign out',
+    'header.user': 'User',
     
     // Marketplace
     'marketplace.title': 'Marketplace',
@@ -202,6 +205,8 @@ const translations: Record<Locale, Record<string, string>> = {
     'nav.settings': 'Pengaturan',
     'nav.login': 'Masuk',
     'nav.register': 'Daftar',
+    'nav.menu': 'Menu',
+    'nav.title': 'Wee Wok The Tok',
     
     // Header
     'header.notifications': 'Notifikasi',
@@ -209,6 +214,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'header.darkMode': 'Beralih ke mode gelap',
     'header.profile': 'Profil',
     'header.signOut': 'Keluar',
+    'header.user': 'Pengguna',
     
     // Marketplace
     'marketplace.title': 'Marketplace',
@@ -375,6 +381,8 @@ const translations: Record<Locale, Record<string, string>> = {
     'nav.settings': '设置',
     'nav.login': '登录',
     'nav.register': '注册',
+    'nav.menu': '菜单',
+    'nav.title': 'Wee Wok The Tok',
     
     // Header
     'header.notifications': '通知',
@@ -382,6 +390,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'header.darkMode': '切换到深色模式',
     'header.profile': '个人资料',
     'header.signOut': '登出',
+    'header.user': '用户',
     
     // Marketplace
     'marketplace.title': '市场',
