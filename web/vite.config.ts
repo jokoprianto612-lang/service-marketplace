@@ -37,6 +37,7 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: true,
     emptyOutDir: true,
+    cssCodeSplit: true,
     rollupOptions: {
       output: {
         entryFileNames: `assets/index-[hash]-${BUILD_TIMESTAMP}.js`,
