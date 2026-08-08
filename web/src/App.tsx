@@ -6,6 +6,7 @@ import { Outlet } from '@tanstack/react-router';
 import { Toaster } from 'react-hot-toast';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
+import { LivingBackground } from './components/decor/LivingBackground';
 import { useAuthStore } from './hooks/useAuthStore';
 
 function AppContent() {
@@ -36,6 +37,7 @@ function AppContent() {
           error: { iconTheme: { primary: '#ef4444', secondary: '#f1f5f9' } },
         }}
       />
+      <LivingBackground />
       {isAuthenticated && (
         <div className="flex h-screen overflow-hidden">
           <Sidebar />

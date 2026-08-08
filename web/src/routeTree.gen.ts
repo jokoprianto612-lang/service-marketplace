@@ -2,12 +2,12 @@
 // Route Tree - TanStack Router
 // ─────────────────────────────────────────────
 import { createRootRoute, createRoute } from '@tanstack/react-router';
-import { RootLayout } from './components/layout/RootLayout';
+import { App } from './App';
 import { MarketplacePage } from './pages/marketplace/MarketplacePage';
 import { DashboardPage } from './pages/dashboard/DashboardPage';
 
 export const rootRoute = createRootRoute({
-  component: RootLayout,
+  component: App,
 });
 
 export const dashboardRoute = createRoute({
