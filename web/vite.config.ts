@@ -37,11 +37,18 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       output: {
+        entryFileNames: `assets/index-[hash]-${Date.now()}.js`,
+        chunkFileNames: `assets/[name]-[hash]-${Date.now()}.js`,
+        assetFileNames: `assets/[name]-[hash]-${Date.now()}.[ext]`,
         manualChunks: {
           vendor: ['react', 'react-dom', '@tanstack/react-query', '@tanstack/react-router'],
           ui: ['@headlessui/react', '@heroicons/react'],
         },
       },
     },
+  },
+  define: {
+    'import.meta.env.VITE_BUILD_TIMESTAMP': JSON.stringify(Date.now()),
+    'import.meta.env.VITE_BUILD_ID': JSON.stringify(`build-${Date.now()}`),
   },
 });
