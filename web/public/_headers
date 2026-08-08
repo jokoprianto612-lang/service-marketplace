@@ -1,0 +1,9 @@
+# Force Cloudflare Pages to rebuild
+# Disable all caching
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+
+# Force fresh build
+CF-Pages-Force-Build: true
+CF-Pages-Cache-Bust: true
