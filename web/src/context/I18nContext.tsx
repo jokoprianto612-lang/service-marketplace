@@ -1,10 +1,10 @@
 // ─────────────────────────────────────────────
 // i18n Context - Multi-language Support
-// Languages: Indonesian (id), English (en)
+// Languages: English (en), Indonesian (id), Mandarin (zh)
 // ─────────────────────────────────────────────
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
-type Locale = 'id' | 'en';
+type Locale = 'en' | 'id' | 'zh';
 
 interface I18nContextType {
   locale: Locale;
@@ -361,6 +361,179 @@ const translations: Record<Locale, Record<string, string>> = {
     'footer.selfHosted': 'Self-hosted',
     'footer.byoai': 'Bawa AI Anda sendiri',
   },
+  
+  zh: {
+    // App Brand
+    'app.name': 'Wee Wok The Tok',
+    'app.tagline': '即时发现并部署服务。',
+    
+    // Navigation
+    'nav.dashboard': '仪表板',
+    'nav.marketplace': '市场',
+    'nav.deployments': '部署',
+    'nav.projects': '项目',
+    'nav.settings': '设置',
+    'nav.login': '登录',
+    'nav.register': '注册',
+    
+    // Header
+    'header.notifications': '通知',
+    'header.lightMode': '切换到浅色模式',
+    'header.darkMode': '切换到深色模式',
+    'header.profile': '个人资料',
+    'header.signOut': '登出',
+    
+    // Marketplace
+    'marketplace.title': '市场',
+    'marketplace.subtitle': '搜索、部署和管理您的基础设施。',
+    'marketplace.searchPlaceholder': '搜索服务、数据库、工具...',
+    'marketplace.searchButton': '搜索',
+    'marketplace.categories': '分类',
+    'marketplace.categoriesSubtitle': '按分类浏览服务',
+    'marketplace.services': '服务',
+    'marketplace.servicesFound': '找到 {{count}} 个服务',
+    'marketplace.noServices': '未找到服务',
+    'marketplace.adjustFilters': '尝试调整搜索或筛选条件',
+    'marketplace.viewMode.grid': '网格视图',
+    'marketplace.viewMode.list': '列表视图',
+    'marketplace.deploy': '部署',
+    'marketplace.deploying': '部署中...',
+    'marketplace.maturity.stable': '稳定版',
+    'marketplace.maturity.beta': '测试版',
+    'marketplace.maturity.alpha': '内测版',
+    'marketplace.pricing.free': '免费',
+    'marketplace.pricing.freemium': '免费增值',
+    'marketplace.pricing.paid': '付费',
+    
+    // Categories
+    'category.automation': '自动化',
+    'category.ai-ml': 'AI/ML',
+    'category.databases': '数据库',
+    'category.monitoring': '监控',
+    'category.storage': '存储',
+    'category.networking': '网络',
+    'category.security': '安全',
+    'category.identity': '身份',
+    'category.developer-tools': '开发工具',
+    'category.ci-cd': 'CI/CD',
+    'category.search': '搜索',
+    
+    // Service detail
+    'service.version': 'v{{version}}',
+    'service.stars': '⭐ {{stars}}',
+    'service.tags': '标签',
+    'service.deployButton': '部署',
+    'service.startButton': '启动',
+    'service.stopButton': '停止',
+    'service.restartButton': '重启',
+    'service.scaleButton': '扩缩容',
+    'service.logs': '日志',
+    'service.metrics': '指标',
+    'service.deployment': '部署',
+    'service.health': '健康',
+    'service.resources': '资源',
+    
+    // Dashboard
+    'dashboard.title': 'Wee Wok The Tok',
+    'dashboard.subtitle': '即时发现并部署服务。搜索、部署和管理您的基础设施。',
+    'dashboard.categories': '分类',
+    'dashboard.categoriesSubtitle': '按分类浏览服务',
+    'dashboard.featuredServices': '特色服务',
+    'dashboard.featuredSubtitle': '本周热门部署服务',
+    'dashboard.resourceUsage': '资源使用',
+    'dashboard.quickActions': '快速操作',
+    'dashboard.recentServices': '最近服务',
+    'dashboard.deployNewService': '部署新服务',
+    'dashboard.addDatabase': '添加数据库',
+    'dashboard.viewMetrics': '查看指标',
+    'dashboard.manageBackups': '管理备份',
+    'dashboard.viewAll': '查看全部',
+    'dashboard.cpuUsage': 'CPU 使用率',
+    'dashboard.memory': '内存',
+    'dashboard.disk': '磁盘',
+    'dashboard.network': '网络',
+    
+    // Deployments
+    'deployments.title': '部署记录',
+    'deployments.status.running': '运行中',
+    'deployments.status.stopped': '已停止',
+    'deployments.status.deploying': '部署中',
+    'deployments.status.failed': '失败',
+    'deployments.cancel': '取消',
+    
+    // Projects
+    'projects.title': '项目',
+    'projects.create': '创建项目',
+    'projects.name': '名称',
+    'projects.slug': '标识符',
+    'projects.description': '描述',
+    'projects.quotas': '配额',
+    'projects.members': '成员',
+    'projects.invite': '邀请',
+    
+    // Settings
+    'settings.title': '设置',
+    'settings.language': '语言',
+    'settings.theme': '主题',
+    'settings.appearance': '外观',
+    'settings.light': '浅色',
+    'settings.dark': '深色',
+    'settings.system': '跟随系统',
+    
+    // Auth
+    'auth.login': '登录',
+    'auth.register': '注册',
+    'auth.email': '邮箱',
+    'auth.password': '密码',
+    'auth.name': '姓名',
+    'auth.confirmPassword': '确认密码',
+    'auth.forgotPassword': '忘记密码？',
+    'auth.noAccount': '没有账号？',
+    'auth.hasAccount': '已有账号？',
+    'auth.signIn': '登录',
+    'auth.signUp': '注册',
+    
+    // Common
+    'common.all': '全部',
+    'common.service': '服务',
+    'common.status': '状态',
+    'common.memory': '内存',
+    'common.uptime': '运行时间',
+    'common.actions': '操作',
+    'common.collapse': '折叠',
+    'common.save': '保存',
+    'common.cancel': '取消',
+    'common.delete': '删除',
+    'common.edit': '编辑',
+    'common.view': '查看',
+    'common.loading': '加载中...',
+    'common.error': '错误',
+    'common.success': '成功',
+    'common.confirm': '确认',
+    'common.close': '关闭',
+    'common.back': '返回',
+    'common.next': '下一步',
+    'common.previous': '上一步',
+    'common.search': '搜索',
+    'common.filter': '筛选',
+    'common.sort': '排序',
+    'common.refresh': '刷新',
+    
+    // Sharing
+    'share.title': '分享部署',
+    'share.description': '与他人分享您部署的服务',
+    'share.copyLink': '复制链接',
+    'share.copied': '链接已复制！',
+    'share.qrCode': '二维码',
+    'share.publicUrl': '公开链接',
+    'share.expires': '{{time}} 后过期',
+    'share.neverExpires': '永不过期',
+    
+    // Footer
+    'footer.openSource': '开源',
+    'footer.selfHosted': '自托管',
+    'footer.byoai': '自带 AI',
+  },
 };
 
 export function I18nProvider({ children, defaultLocale = 'en' }: { children: ReactNode; defaultLocale?: Locale }) {
@@ -405,8 +578,9 @@ export function useI18n() {
   return context;
 }
 
-// Helper for language options
+// Helper for language options - NVIDIA Build style
 export const languageOptions = [
   { code: 'en' as Locale, name: 'English', nativeName: 'English', flag: '🇺🇸' },
   { code: 'id' as Locale, name: 'Indonesian', nativeName: 'Bahasa Indonesia', flag: '🇮🇩' },
+  { code: 'zh' as Locale, name: 'Chinese (Simplified)', nativeName: '简体中文', flag: '🇨🇳' },
 ];

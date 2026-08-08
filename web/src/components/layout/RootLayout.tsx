@@ -2,12 +2,12 @@
 // Root Layout with Outlet
 // ─────────────────────────────────────────────
 import { Outlet } from '@tanstack/react-router';
-import { BatikBackdrop } from '../decor/BatikCorner';
+import { CornerAccents } from '../decor/CornerAccent';
 
 export function RootLayout() {
   return (
     <>
-      <BatikBackdrop />
+      <CornerAccents />
       <Outlet />
     </>
   );
