@@ -2,12 +2,12 @@
 // Root Layout with Outlet
 // ─────────────────────────────────────────────
 import { Outlet } from '@tanstack/react-router';
-import { CornerAccents } from '../decor/CornerAccent';
+import { LivingBackground } from '../decor/LivingBackground';
 
 export function RootLayout() {
   return (
     <>
-      <CornerAccents />
+      <LivingBackground />
       <Outlet />
     </>
   );
