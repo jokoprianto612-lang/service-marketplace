@@ -55,7 +55,7 @@ export default defineConfig({
   },
   define: {
     'import.meta.env.VITE_BUILD_TIMESTAMP': JSON.stringify(BUILD_TIMESTAMP),
-    'import.meta.env.VITE_BUILD_ID': JSON.stringify(BUILD_ID),
+    'import.meta.env.VITE_BUILD_ID': JSON.stringify(`build-${BUILD_TIMESTAMP}-${Math.random().toString(36).substring(2, 9)}`),
     'import.meta.env.VITE_FORCE_REBUILD': 'true',
     'import.meta.env.CF_PAGES_FORCE_REBUILD': 'true',
   },
