@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────
-// Sidebar Navigation
+// Sidebar Navigation - NVIDIA Build Style
 // ─────────────────────────────────────────────
 import { Link, useLocation } from '@tanstack/react-router';
 import {
@@ -29,22 +29,22 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        'fixed left-0 top-0 z-40 h-screen bg-dark-950 border-r border-dark-800 transition-all duration-300 ease-out',
+        'fixed left-0 top-16 z-40 h-[calc(100vh-4rem)] glass border-r border-white/10 transition-all duration-300 ease-out',
         collapsed ? 'w-16' : 'w-64'
       )}
       aria-label="Main navigation"
     >
       <div className="flex h-full flex-col">
         {/* Logo */}
-        <div className={cn('flex h-16 items-center px-4 border-b border-dark-800', collapsed && 'justify-center')}>
+        <div className={cn('flex h-14 items-center px-4 border-b border-white/10', collapsed && 'justify-center')}>
           <Link
             to="/"
             className="flex items-center gap-2"
             style={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : 'auto', transition: 'opacity 150ms ease, width 150ms ease' }}
             aria-label={t('app.name')}
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-600 flex-shrink-0">
-              <Store className="h-5 w-5 text-white" aria-hidden="true" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-500/20 flex-shrink-0 border border-primary-500/30">
+              <Store className="h-5 w-5 text-primary-400" aria-hidden="true" />
             </div>
             <span className="font-semibold text-base text-white whitespace-nowrap">{t('app.name')}</span>
           </Link>
@@ -60,10 +60,10 @@ export function Sidebar() {
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-all duration-200',
+                  'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
                   isActive
-                    ? 'bg-primary-600/20 text-primary-400'
-                    : 'text-dark-400 hover:bg-dark-800 hover:text-dark-100'
+                    ? 'bg-primary-500/20 text-primary-400 border border-primary-500/30'
+                    : 'text-canvas-400 hover:bg-white/5 hover:text-white'
                 )}
                 title={collapsed ? t(item.name) : undefined}
                 aria-current={isActive ? 'page' : undefined}
@@ -76,11 +76,11 @@ export function Sidebar() {
         </nav>
 
         {/* Collapse toggle */}
-        <div className="p-4 border-t border-dark-800">
+        <div className="p-4 border-t border-white/10">
           <button
             onClick={() => setCollapsed(!collapsed)}
             className={cn(
-              'flex w-full items-center justify-center gap-2 rounded-md px-3 py-2 text-sm text-dark-400 hover:bg-dark-800 hover:text-dark-100 transition-colors',
+              'flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm text-canvas-400 hover:bg-white/5 hover:text-white transition-colors',
               collapsed && 'justify-center'
             )}
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
