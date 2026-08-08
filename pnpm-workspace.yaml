@@ -1,5 +1,5 @@
-packages:
-  - server
-  - web
-  - worker
-  - shared/*
+rm pnpm-lock.yaml
+pnpm install
+git add pnpm-lock.yaml
+git commit -m "chore: regenerate pnpm-lock.yaml for all workspaces"
+git push origin master
