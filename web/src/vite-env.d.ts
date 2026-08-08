@@ -7,3 +7,10 @@
 import 'react';
 import 'react-dom';
 import 'react/jsx-runtime';
+
+// Explicitly declare JSX namespace to ensure IntrinsicElements are available
+declare global {
+  namespace JSX {
+    interface IntrinsicElements extends React.JSX.IntrinsicElements {}
+  }
+}

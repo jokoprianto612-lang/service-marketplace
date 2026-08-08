@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────
-// Dashboard Page - NVIDIA Build Style with 3D
+// Dashboard Page - NVIDIA Build Style (Green Theme)
 // ─────────────────────────────────────────────
 import {
   Server,
@@ -20,7 +20,6 @@ import { Link } from '@tanstack/react-router';
 import { cn } from '../../utils/cn';
 import { BrandIcon } from '../../components/icons/BrandIcon';
 import { useI18n } from '../../context/I18nContext';
-import { Hero3D } from '../../components/3d/Scene3D';
 
 const recentServices = [
   { name: 'n8n Workflow', status: 'running', cpu: '12%', memory: '256MB', uptime: '5d 12h', id: 'n8n-workflow' },
@@ -31,10 +30,10 @@ const recentServices = [
 ];
 
 const resourceMetrics = [
-  { label: 'CPU Usage', key: 'dashboard.cpuUsage', value: '34%', color: 'bg-gradient-to-r from-primary-500 to-purple-500', icon: Cpu },
+  { label: 'CPU Usage', key: 'dashboard.cpuUsage', value: '34%', color: 'bg-gradient-to-r from-green-500 to-emerald-500', icon: Cpu },
   { label: 'Memory', key: 'dashboard.memory', value: '68%', color: 'bg-gradient-to-r from-green-500 to-emerald-500', icon: MemoryStick },
   { label: 'Disk', key: 'dashboard.disk', value: '45%', color: 'bg-gradient-to-r from-amber-500 to-orange-500', icon: HardDrive },
-  { label: 'Network', key: 'dashboard.network', value: '12%', color: 'bg-gradient-to-r from-primary-500 to-purple-500', icon: Globe },
+  { label: 'Network', key: 'dashboard.network', value: '12%', color: 'bg-gradient-to-r from-green-500 to-emerald-500', icon: Globe },
 ];
 
 const quickActions = [
@@ -64,14 +63,14 @@ const categories = [
 
 export function DashboardPage() {
   const { t } = useI18n();
-  
+
   return (
     <div className="section animate-in relative z-10">
       {/* Hero Section */}
       <section className="py-12 lg:py-16 animate-in">
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <h1 className="text-display-lg font-bold text-white mb-4 gradient-text">
+            <h1 className="text-display-lg font-bold text-white mb-4 gradient-text-green">
               {t('dashboard.title')}
             </h1>
             <p className="text-body-lg text-canvas-400 mb-8">
@@ -79,7 +78,7 @@ export function DashboardPage() {
             </p>
             {/* Hero Search Bar */}
             <div className="relative max-w-2xl mx-auto">
-              <Search className="absolute left-5 top-1/2 h-6 w-6 -translate-y-1/2 text-primary-400" aria-hidden="true" />
+              <Search className="absolute left-5 top-1/2 h-6 w-6 -translate-y-1/2 text-green-400" aria-hidden="true" />
               <input
                 type="search"
                 placeholder={t('marketplace.searchPlaceholder')}
@@ -93,40 +92,44 @@ export function DashboardPage() {
         </div>
       </section>
 
-      {/* 3D Showcase Section */}
+      {/* Showcase Section - CSS-based */}
       <section className="mb-16 animate-in">
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <div className="grid lg:grid-cols-3 gap-6 items-center">
             <div className="lg:col-span-2">
               <div className="card-glass-hover p-6 h-full min-h-[300px] relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-purple-500/5 to-amber-500/10" />
-                <Hero3D serviceId="hermes-ai-agent" />
-                <div className="absolute inset-0 flex items-end justify-between p-6 pointer-events-none">
-                  <div>
-                    <span className="badge-info text-sm mb-2">{t('category.ai-ml')}</span>
-                    <h3 className="text-heading-lg font-bold text-white mb-2">Hermes AI Agent</h3>
-                    <p className="text-body-md text-canvas-300">Self-improving AI agent by Nous Research with skills & memory</p>
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-emerald-500/5 to-amber-500/10" />
+                <div className="relative h-full flex items-center justify-center">
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="w-64 h-64 rounded-full bg-gradient-to-br from-green-500/20 to-emerald-500/20 blur-3xl animate-pulse" />
                   </div>
-                  <div className="text-right">
-                    <span className="badge-success text-sm">{t('marketplace.maturity.stable')}</span>
+                  <div className="absolute inset-0 flex items-end justify-between p-6 pointer-events-none">
+                    <div>
+                      <span className="badge-info text-sm mb-2">{t('category.ai-ml')}</span>
+                      <h3 className="text-heading-lg font-bold text-white mb-2">Hermes AI Agent</h3>
+                      <p className="text-body-md text-canvas-300">Self-improving AI agent by Nous Research with skills & memory</p>
+                    </div>
+                    <div className="text-right">
+                      <span className="badge-success text-sm">{t('marketplace.maturity.stable')}</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
             <div className="card-glass-hover p-6 text-center">
-              <Sparkles className="h-12 w-12 text-primary-400 mx-auto mb-4" aria-hidden="true" />
-              <h3 className="text-heading-md font-semibold text-white mb-2">3D Experience</h3>
+              <Sparkles className="h-12 w-12 text-green-400 mx-auto mb-4" aria-hidden="true" />
+              <h3 className="text-heading-md font-semibold text-white mb-2">{t('dashboard.experienceTitle')}</h3>
               <p className="text-body-md text-canvas-400 mb-4">
-                Interactive 3D visualizations powered by React Three Fiber. Explore services in a vibrant, living environment.
+                {t('dashboard.experienceDesc')}
               </p>
               <div className="flex items-center justify-center gap-4 text-caption text-canvas-400">
                 <span className="flex items-center gap-1">
-                  <span className="w-3 h-3 rounded-full bg-primary-500" />
-                  Indigo
+                  <span className="w-3 h-3 rounded-full bg-green-500" />
+                  Green
                 </span>
                 <span className="flex items-center gap-1">
-                  <span className="w-3 h-3 rounded-full bg-purple-500" />
-                  Purple
+                  <span className="w-3 h-3 rounded-full bg-emerald-500" />
+                  Emerald
                 </span>
                 <span className="flex items-center gap-1">
                   <span className="w-3 h-3 rounded-full bg-amber-500" />
@@ -157,7 +160,7 @@ export function DashboardPage() {
               )}
               style={{ animationDelay: `${index * 60}ms` }}
             >
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary-500/20 text-primary-400 mx-auto mb-4">
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-green-500/20 text-green-400 mx-auto mb-4">
                 <cat.icon className="h-7 w-7" aria-hidden="true" />
               </div>
               <h3 className="text-heading-sm font-semibold text-white mb-1">{t(cat.key)}</h3>
@@ -191,7 +194,7 @@ export function DashboardPage() {
               )}
               style={{ animationDelay: `${index * 80}ms` }}
             >
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary-500/20 mx-auto mb-4">
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-green-500/20 mx-auto mb-4">
                 <BrandIcon serviceId={service.serviceId} size={28} />
               </div>
               <div className="flex items-center gap-2 mb-2">
@@ -294,7 +297,7 @@ export function DashboardPage() {
                   <tr key={service.name} className="hover:bg-white/5 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-500/20">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-500/20">
                           <BrandIcon serviceId={service.id} size={20} />
                         </div>
                         <span className="font-medium text-white">{service.name}</span>
