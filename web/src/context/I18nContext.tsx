@@ -1,10 +1,10 @@
 // ─────────────────────────────────────────────
 // i18n Context - Multi-language Support
-// Languages: Indonesian (id), English (en), Mandarin (zh)
+// Languages: Indonesian (id), English (en)
 // ─────────────────────────────────────────────
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
-type Locale = 'id' | 'en' | 'zh';
+type Locale = 'id' | 'en';
 
 interface I18nContextType {
   locale: Locale;
@@ -14,9 +14,13 @@ interface I18nContextType {
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
-// Translation dictionaries
+// Translation dictionaries - Updated 2026
 const translations: Record<Locale, Record<string, string>> = {
   en: {
+    // App Brand
+    'app.name': 'Wee Wok The Tok',
+    'app.tagline': 'Discover and deploy services instantly.',
+    
     // Navigation
     'nav.dashboard': 'Dashboard',
     'nav.marketplace': 'Marketplace',
@@ -35,13 +39,13 @@ const translations: Record<Locale, Record<string, string>> = {
     
     // Marketplace
     'marketplace.title': 'Marketplace',
-    'marketplace.subtitle': 'Discover and deploy services instantly. Search, deploy, and manage your infrastructure.',
+    'marketplace.subtitle': 'Search, deploy, and manage your infrastructure.',
     'marketplace.searchPlaceholder': 'Search services, databases, tools...',
     'marketplace.searchButton': 'Search',
     'marketplace.categories': 'Categories',
     'marketplace.categoriesSubtitle': 'Explore services by category',
     'marketplace.services': 'Services',
-    'marketplace.servicesFound': '{{count}} {{count === 1 ? "service" : "services"}} found',
+    'marketplace.servicesFound': '{{count}} services found',
     'marketplace.noServices': 'No services found',
     'marketplace.adjustFilters': 'Try adjusting your search or filters',
     'marketplace.viewMode.grid': 'Grid view',
@@ -66,6 +70,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'category.identity': 'Identity',
     'category.developer-tools': 'Dev Tools',
     'category.ci-cd': 'CI/CD',
+    'category.search': 'Search',
     
     // Service detail
     'service.version': 'v{{version}}',
@@ -81,6 +86,26 @@ const translations: Record<Locale, Record<string, string>> = {
     'service.deployment': 'Deployment',
     'service.health': 'Health',
     'service.resources': 'Resources',
+    
+    // Dashboard
+    'dashboard.title': 'Wee Wok The Tok',
+    'dashboard.subtitle': 'Discover and deploy services instantly. Search, deploy, and manage your infrastructure.',
+    'dashboard.categories': 'Categories',
+    'dashboard.categoriesSubtitle': 'Explore services by category',
+    'dashboard.featuredServices': 'Featured Services',
+    'dashboard.featuredSubtitle': 'Popular services deployed this week',
+    'dashboard.resourceUsage': 'Resource Usage',
+    'dashboard.quickActions': 'Quick Actions',
+    'dashboard.recentServices': 'Recent Services',
+    'dashboard.deployNewService': 'Deploy New Service',
+    'dashboard.addDatabase': 'Add Database',
+    'dashboard.viewMetrics': 'View Metrics',
+    'dashboard.manageBackups': 'Manage Backups',
+    'dashboard.viewAll': 'View All',
+    'dashboard.cpuUsage': 'CPU Usage',
+    'dashboard.memory': 'Memory',
+    'dashboard.disk': 'Disk',
+    'dashboard.network': 'Network',
     
     // Deployments
     'deployments.title': 'Deployments',
@@ -123,6 +148,13 @@ const translations: Record<Locale, Record<string, string>> = {
     'auth.signUp': 'Sign up',
     
     // Common
+    'common.all': 'All',
+    'common.service': 'Service',
+    'common.status': 'Status',
+    'common.memory': 'Memory',
+    'common.uptime': 'Uptime',
+    'common.actions': 'Actions',
+    'common.collapse': 'Collapse',
     'common.save': 'Save',
     'common.cancel': 'Cancel',
     'common.delete': 'Delete',
@@ -158,6 +190,11 @@ const translations: Record<Locale, Record<string, string>> = {
   },
   
   id: {
+    // App Brand
+    'app.name': 'Wee Wok The Tok',
+    'app.tagline': 'Temukan dan sebarkan layanan secara instan.',
+    
+    // Navigation
     'nav.dashboard': 'Dashboard',
     'nav.marketplace': 'Marketplace',
     'nav.deployments': 'Penempatan',
@@ -166,14 +203,16 @@ const translations: Record<Locale, Record<string, string>> = {
     'nav.login': 'Masuk',
     'nav.register': 'Daftar',
     
+    // Header
     'header.notifications': 'Notifikasi',
     'header.lightMode': 'Beralih ke mode terang',
     'header.darkMode': 'Beralih ke mode gelap',
     'header.profile': 'Profil',
     'header.signOut': 'Keluar',
     
+    // Marketplace
     'marketplace.title': 'Marketplace',
-    'marketplace.subtitle': 'Temukan dan sebarkan layanan secara instan. Cari, sebarkan, dan kelola infrastruktur Anda.',
+    'marketplace.subtitle': 'Cari, sebarkan, dan kelola infrastruktur Anda.',
     'marketplace.searchPlaceholder': 'Cari layanan, database, alat...',
     'marketplace.searchButton': 'Cari',
     'marketplace.categories': 'Kategori',
@@ -193,6 +232,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'marketplace.pricing.freemium': 'Freemium',
     'marketplace.pricing.paid': 'Berbayar',
     
+    // Categories
     'category.automation': 'Otomatisasi',
     'category.ai-ml': 'AI/ML',
     'category.databases': 'Database',
@@ -203,7 +243,9 @@ const translations: Record<Locale, Record<string, string>> = {
     'category.identity': 'Identitas',
     'category.developer-tools': 'Alat Dev',
     'category.ci-cd': 'CI/CD',
+    'category.search': 'Pencarian',
     
+    // Service detail
     'service.version': 'v{{version}}',
     'service.stars': '⭐ {{stars}}',
     'service.tags': 'Tag',
@@ -218,6 +260,27 @@ const translations: Record<Locale, Record<string, string>> = {
     'service.health': 'Kesehatan',
     'service.resources': 'Sumber Daya',
     
+    // Dashboard
+    'dashboard.title': 'Wee Wok The Tok',
+    'dashboard.subtitle': 'Temukan dan sebarkan layanan secara instan. Cari, sebarkan, dan kelola infrastruktur Anda.',
+    'dashboard.categories': 'Kategori',
+    'dashboard.categoriesSubtitle': 'Jelajahi layanan berdasarkan kategori',
+    'dashboard.featuredServices': 'Layanan Unggulan',
+    'dashboard.featuredSubtitle': 'Layanan populer yang dideploy minggu ini',
+    'dashboard.resourceUsage': 'Penggunaan Sumber Daya',
+    'dashboard.quickActions': 'Aksi Cepat',
+    'dashboard.recentServices': 'Layanan Terbaru',
+    'dashboard.deployNewService': 'Sebarkan Layanan Baru',
+    'dashboard.addDatabase': 'Tambah Database',
+    'dashboard.viewMetrics': 'Lihat Metrik',
+    'dashboard.manageBackups': 'Kelola Backup',
+    'dashboard.viewAll': 'Lihat Semua',
+    'dashboard.cpuUsage': 'Penggunaan CPU',
+    'dashboard.memory': 'Memori',
+    'dashboard.disk': 'Disk',
+    'dashboard.network': 'Jaringan',
+    
+    // Deployments
     'deployments.title': 'Penempatan',
     'deployments.status.running': 'Berjalan',
     'deployments.status.stopped': 'Berhenti',
@@ -225,6 +288,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'deployments.status.failed': 'Gagal',
     'deployments.cancel': 'Batal',
     
+    // Projects
     'projects.title': 'Proyek',
     'projects.create': 'Buat Proyek',
     'projects.name': 'Nama',
@@ -234,6 +298,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'projects.members': 'Anggota',
     'projects.invite': 'Undang',
     
+    // Settings
     'settings.title': 'Pengaturan',
     'settings.language': 'Bahasa',
     'settings.theme': 'Tema',
@@ -242,6 +307,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'settings.dark': 'Gelap',
     'settings.system': 'Sistem',
     
+    // Auth
     'auth.login': 'Masuk',
     'auth.register': 'Daftar',
     'auth.email': 'Email',
@@ -254,6 +320,14 @@ const translations: Record<Locale, Record<string, string>> = {
     'auth.signIn': 'Masuk',
     'auth.signUp': 'Daftar',
     
+    // Common
+    'common.all': 'Semua',
+    'common.service': 'Layanan',
+    'common.status': 'Status',
+    'common.memory': 'Memori',
+    'common.uptime': 'Waktu Aktif',
+    'common.actions': 'Aksi',
+    'common.collapse': 'Kolaps',
     'common.save': 'Simpan',
     'common.cancel': 'Batal',
     'common.delete': 'Hapus',
@@ -272,6 +346,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'common.sort': 'Urutkan',
     'common.refresh': 'Refresh',
     
+    // Sharing
     'share.title': 'Bagikan Penempatan',
     'share.description': 'Bagikan layanan yang Anda sebarkan dengan orang lain',
     'share.copyLink': 'Salin Tautan',
@@ -281,138 +356,10 @@ const translations: Record<Locale, Record<string, string>> = {
     'share.expires': 'Berakhir dalam {{time}}',
     'share.neverExpires': 'Tidak pernah berakhir',
     
+    // Footer
     'footer.openSource': 'Sumber terbuka',
     'footer.selfHosted': 'Self-hosted',
     'footer.byoai': 'Bawa AI Anda sendiri',
-  },
-  
-  zh: {
-    'nav.dashboard': '仪表板',
-    'nav.marketplace': '市场',
-    'nav.deployments': '部署',
-    'nav.projects': '项目',
-    'nav.settings': '设置',
-    'nav.login': '登录',
-    'nav.register': '注册',
-    
-    'header.notifications': '通知',
-    'header.lightMode': '切换到浅色模式',
-    'header.darkMode': '切换到深色模式',
-    'header.profile': '个人资料',
-    'header.signOut': '登出',
-    
-    'marketplace.title': '服务市场',
-    'marketplace.subtitle': '即时发现并部署服务。搜索、部署和管理您的基础设施。',
-    'marketplace.searchPlaceholder': '搜索服务、数据库、工具...',
-    'marketplace.searchButton': '搜索',
-    'marketplace.categories': '分类',
-    'marketplace.categoriesSubtitle': '按分类浏览服务',
-    'marketplace.services': '服务',
-    'marketplace.servicesFound': '找到 {{count}} 个服务',
-    'marketplace.noServices': '未找到服务',
-    'marketplace.adjustFilters': '尝试调整搜索或筛选条件',
-    'marketplace.viewMode.grid': '网格视图',
-    'marketplace.viewMode.list': '列表视图',
-    'marketplace.deploy': '部署',
-    'marketplace.deploying': '部署中...',
-    'marketplace.maturity.stable': '稳定版',
-    'marketplace.maturity.beta': '测试版',
-    'marketplace.maturity.alpha': '内测版',
-    'marketplace.pricing.free': '免费',
-    'marketplace.pricing.freemium': '免费增值',
-    'marketplace.pricing.paid': '付费',
-    
-    'category.automation': '自动化',
-    'category.ai-ml': 'AI/ML',
-    'category.databases': '数据库',
-    'category.monitoring': '监控',
-    'category.storage': '存储',
-    'category.networking': '网络',
-    'category.security': '安全',
-    'category.identity': '身份',
-    'category.developer-tools': '开发工具',
-    'category.ci-cd': 'CI/CD',
-    
-    'service.version': 'v{{version}}',
-    'service.stars': '⭐ {{stars}}',
-    'service.tags': '标签',
-    'service.deployButton': '部署',
-    'service.startButton': '启动',
-    'service.stopButton': '停止',
-    'service.restartButton': '重启',
-    'service.scaleButton': '扩缩容',
-    'service.logs': '日志',
-    'service.metrics': '指标',
-    'service.deployment': '部署',
-    'service.health': '健康',
-    'service.resources': '资源',
-    
-    'deployments.title': '部署记录',
-    'deployments.status.running': '运行中',
-    'deployments.status.stopped': '已停止',
-    'deployments.status.deploying': '部署中',
-    'deployments.status.failed': '失败',
-    'deployments.cancel': '取消',
-    
-    'projects.title': '项目',
-    'projects.create': '创建项目',
-    'projects.name': '名称',
-    'projects.slug': '标识符',
-    'projects.description': '描述',
-    'projects.quotas': '配额',
-    'projects.members': '成员',
-    'projects.invite': '邀请',
-    
-    'settings.title': '设置',
-    'settings.language': '语言',
-    'settings.theme': '主题',
-    'settings.appearance': '外观',
-    'settings.light': '浅色',
-    'settings.dark': '深色',
-    'settings.system': '跟随系统',
-    
-    'auth.login': '登录',
-    'auth.register': '注册',
-    'auth.email': '邮箱',
-    'auth.password': '密码',
-    'auth.name': '姓名',
-    'auth.confirmPassword': '确认密码',
-    'auth.forgotPassword': '忘记密码？',
-    'auth.noAccount': '没有账号？',
-    'auth.hasAccount': '已有账号？',
-    'auth.signIn': '登录',
-    'auth.signUp': '注册',
-    
-    'common.save': '保存',
-    'common.cancel': '取消',
-    'common.delete': '删除',
-    'common.edit': '编辑',
-    'common.view': '查看',
-    'common.loading': '加载中...',
-    'common.error': '错误',
-    'common.success': '成功',
-    'common.confirm': '确认',
-    'common.close': '关闭',
-    'common.back': '返回',
-    'common.next': '下一步',
-    'common.previous': '上一步',
-    'common.search': '搜索',
-    'common.filter': '筛选',
-    'common.sort': '排序',
-    'common.refresh': '刷新',
-    
-    'share.title': '分享部署',
-    'share.description': '与他人分享您部署的服务',
-    'share.copyLink': '复制链接',
-    'share.copied': '链接已复制！',
-    'share.qrCode': '二维码',
-    'share.publicUrl': '公开链接',
-    'share.expires': '{{time}} 后过期',
-    'share.neverExpires': '永不过期',
-    
-    'footer.openSource': '开源',
-    'footer.selfHosted': '自托管',
-    'footer.byoai': '自带 AI',
   },
 };
 
@@ -462,5 +409,4 @@ export function useI18n() {
 export const languageOptions = [
   { code: 'en' as Locale, name: 'English', nativeName: 'English', flag: '🇺🇸' },
   { code: 'id' as Locale, name: 'Indonesian', nativeName: 'Bahasa Indonesia', flag: '🇮🇩' },
-  { code: 'zh' as Locale, name: 'Chinese (Simplified)', nativeName: '简体中文', flag: '🇨🇳' },
 ];

@@ -7,19 +7,26 @@ import { Toaster } from 'react-hot-toast';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
 import { useAuthStore } from './hooks/useAuthStore';
-import { ThemeProvider } from './context/ThemeContext';
-import { I18nProvider } from './context/I18nContext';
 
 function AppContent() {
-  const { isAuthenticated, checkAuth } = useAuthStore();
+  const { isAuthenticated, isLoading, checkAuth } = useAuthStore();
 
   // Check auth on mount
   React.useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
+  // Don't render authenticated layout until auth check completes
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-canvas-50 dark:bg-canvas-950 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-500 border-t-transparent" />
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-background dark:bg-dark-950">
+    <div className="min-h-screen bg-canvas-50 dark:bg-canvas-950">
       <Toaster
         position="top-right"
         toastOptions={{
@@ -46,11 +53,5 @@ function AppContent() {
 }
 
 export function App() {
-  return (
-    <ThemeProvider>
-      <I18nProvider defaultLocale="en">
-        <AppContent />
-      </I18nProvider>
-    </ThemeProvider>
-  );
+  return <AppContent />;
 }

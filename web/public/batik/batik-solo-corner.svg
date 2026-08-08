@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320" fill="none" role="img" aria-label="Motif batik Solo - Parang Barong">
+  <title>Batik Solo — Parang Barong</title>
+  <defs>
+    <!-- Parang Barong: diagonal S-curve "sword" motif, the classic Surakarta (Solo) keraton pattern -->
+    <pattern id="parang-barong" width="80" height="80" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+      <!-- lidah / tongue: the thick sweeping stroke -->
+      <path d="M0 40 C 14 40, 20 22, 34 22 C 48 22, 54 40, 68 40 L 68 52 C 54 52, 48 34, 34 34 C 20 34, 14 52, 0 52 Z"
+            fill="currentColor" fill-opacity="0.55" />
+      <!-- mata gareng: paired dots between strokes -->
+      <circle cx="18" cy="66" r="3" fill="currentColor" fill-opacity="0.45" />
+      <circle cx="34" cy="72" r="2" fill="currentColor" fill-opacity="0.35" />
+      <circle cx="50" cy="66" r="3" fill="currentColor" fill-opacity="0.45" />
+      <!-- isen-isen: fine filler lines -->
+      <path d="M0 12 C 16 12, 22 0, 36 0" stroke="currentColor" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+      <path d="M44 80 C 58 80, 64 68, 80 68" stroke="currentColor" stroke-opacity="0.3" stroke-width="1.5" fill="none" />
+    </pattern>
+
+    <!-- Truntum: tiny stars (Solo motif, symbol of rekindled love — worn by parents of the bride) -->
+    <pattern id="truntum" width="40" height="40" patternUnits="userSpaceOnUse">
+      <g fill="currentColor">
+        <path d="M20 8 L22 17 L31 20 L22 23 L20 32 L18 23 L9 20 L18 17 Z" fill-opacity="0.5" />
+        <circle cx="20" cy="20" r="1.6" fill-opacity="0.7" />
+        <circle cx="4" cy="4" r="1.2" fill-opacity="0.35" />
+        <circle cx="36" cy="36" r="1.2" fill-opacity="0.35" />
+        <circle cx="36" cy="4" r="1.2" fill-opacity="0.35" />
+        <circle cx="4" cy="36" r="1.2" fill-opacity="0.35" />
+      </g>
+    </pattern>
+
+    <!-- Kawung: interlocking ellipses (aren palm fruit) -->
+    <pattern id="kawung" width="56" height="56" patternUnits="userSpaceOnUse">
+      <g stroke="currentColor" fill="none" stroke-width="1.6" stroke-opacity="0.45">
+        <ellipse cx="14" cy="28" rx="12" ry="9" />
+        <ellipse cx="42" cy="28" rx="12" ry="9" />
+        <ellipse cx="28" cy="14" rx="9" ry="12" />
+        <ellipse cx="28" cy="42" rx="9" ry="12" />
+      </g>
+      <circle cx="28" cy="28" r="2" fill="currentColor" fill-opacity="0.5" />
+    </pattern>
+
+    <linearGradient id="fadeCorner" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fff" stop-opacity="1" />
+      <stop offset="55%" stop-color="#fff" stop-opacity="0.45" />
+      <stop offset="100%" stop-color="#fff" stop-opacity="0" />
+    </linearGradient>
+    <mask id="cornerMask">
+      <rect width="320" height="320" fill="url(#fadeCorner)" />
+    </mask>
+  </defs>
+
+  <g mask="url(#cornerMask)">
+    <rect width="320" height="320" fill="url(#parang-barong)" />
+    <rect width="320" height="320" fill="url(#truntum)" opacity="0.5" />
+    <rect width="150" height="150" fill="url(#kawung)" opacity="0.35" />
+  </g>
+</svg>

@@ -8,6 +8,7 @@ import { cn } from '../../utils/cn';
 
 // Map service IDs to logo filenames
 const logoMap: Record<string, string> = {
+  // Service logos
   'n8n-workflow': 'n8n',
   'hermes-ai-agent': 'hermes',
   'postgresql': 'postgresql',
@@ -18,6 +19,17 @@ const logoMap: Record<string, string> = {
   'authentik': 'authentik',
   'vaultwarden': 'vaultwarden',
   'portainer': 'portainer',
+  // Category logos (use representative service logos)
+  'automation': 'n8n',
+  'ai-ml': 'hermes',
+  'databases': 'postgresql',
+  'monitoring': 'grafana',
+  'storage': 'minio',
+  'networking': 'nginx',
+  'security': 'vaultwarden',
+  'identity': 'authentik',
+  'developer-tools': 'portainer',
+  'ci-cd': 'grafana',
 };
 
 interface BrandIconProps {
@@ -44,10 +56,13 @@ export const BrandIcon = forwardRef<HTMLImageElement | HTMLDivElement, BrandIcon
       );
     }
 
+    // Use PNG for hermes (mascot image), SVG for others
+    const ext = logoName === 'hermes' ? 'png' : 'svg';
+
     return (
       <img
         ref={ref as any}
-        src={`/logos/${logoName}.svg`}
+        src={`/logos/${logoName}.${ext}`}
         alt=""
         className={cn('object-contain transition-transform duration-200', className)}
         style={{ width: size, height: size }}

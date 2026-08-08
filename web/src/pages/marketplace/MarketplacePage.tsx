@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────
-// Marketplace Page - Service Marketplace
+// Marketplace Page - Wee Wok The Tok
 // Pattern: Marketplace / Directory
 // Style: Vibrant & Block-based
 // ─────────────────────────────────────────────
@@ -8,20 +8,21 @@ import { Search, Box, Database, Activity, HardDrive, Globe, Shield, User, Termin
 import { useState } from 'react';
 import { cn } from '../../utils/cn';
 import { BrandIcon, getCategoryFallbackIcon } from '../../components/icons/BrandIcon';
+import { useI18n } from '../../context/I18nContext';
 
 const categories = [
-  { id: 'all', name: 'All', icon: Box },
-  { id: 'automation', name: 'Automation', icon: Zap },
-  { id: 'ai-ml', name: 'AI/ML', icon: Brain },
-  { id: 'databases', name: 'Databases', icon: Database },
-  { id: 'monitoring', name: 'Monitoring', icon: Activity },
-  { id: 'storage', name: 'Storage', icon: HardDrive },
-  { id: 'networking', name: 'Networking', icon: Globe },
-  { id: 'security', name: 'Security', icon: Shield },
-  { id: 'identity', name: 'Identity', icon: User },
-  { id: 'developer-tools', name: 'Dev Tools', icon: Terminal },
-  { id: 'ci-cd', name: 'CI/CD', icon: GitBranch },
-  { id: 'search', name: 'Search', icon: SearchIcon },
+  { id: 'all', name: 'All', i18nKey: 'common.all', icon: Box },
+  { id: 'automation', name: 'Automation', i18nKey: 'category.automation', icon: Zap },
+  { id: 'ai-ml', name: 'AI/ML', i18nKey: 'category.ai-ml', icon: Brain },
+  { id: 'databases', name: 'Databases', i18nKey: 'category.databases', icon: Database },
+  { id: 'monitoring', name: 'Monitoring', i18nKey: 'category.monitoring', icon: Activity },
+  { id: 'storage', name: 'Storage', i18nKey: 'category.storage', icon: HardDrive },
+  { id: 'networking', name: 'Networking', i18nKey: 'category.networking', icon: Globe },
+  { id: 'security', name: 'Security', i18nKey: 'category.security', icon: Shield },
+  { id: 'identity', name: 'Identity', i18nKey: 'category.identity', icon: User },
+  { id: 'developer-tools', name: 'Dev Tools', i18nKey: 'category.developer-tools', icon: Terminal },
+  { id: 'ci-cd', name: 'CI/CD', i18nKey: 'category.ci-cd', icon: GitBranch },
+  { id: 'search', name: 'Search', i18nKey: 'category.search', icon: SearchIcon },
 ];
 
 const services = [
@@ -30,6 +31,7 @@ const services = [
     name: 'n8n Workflow Automation',
     description: 'Extendable workflow automation tool with 400+ integrations',
     category: 'automation',
+    i18nCategoryKey: 'category.automation',
     version: '1.42.0',
     maturity: 'stable',
     pricing: 'free',
@@ -41,6 +43,7 @@ const services = [
     name: 'Hermes AI Agent',
     description: 'Self-improving AI agent by Nous Research with skills & memory',
     category: 'ai-ml',
+    i18nCategoryKey: 'category.ai-ml',
     version: '1.0.0',
     maturity: 'beta',
     pricing: 'free',
@@ -52,6 +55,7 @@ const services = [
     name: 'PostgreSQL',
     description: 'Advanced open source relational database',
     category: 'databases',
+    i18nCategoryKey: 'category.databases',
     version: '16.0',
     maturity: 'stable',
     pricing: 'free',
@@ -63,6 +67,7 @@ const services = [
     name: 'Redis',
     description: 'In-memory data structure store, cache, and message broker',
     category: 'databases',
+    i18nCategoryKey: 'category.databases',
     version: '7.2',
     maturity: 'stable',
     pricing: 'free',
@@ -74,6 +79,7 @@ const services = [
     name: 'Grafana + Prometheus',
     description: 'Complete observability stack with dashboards',
     category: 'monitoring',
+    i18nCategoryKey: 'category.monitoring',
     version: '11.0',
     maturity: 'stable',
     pricing: 'free',
@@ -85,6 +91,7 @@ const services = [
     name: 'MinIO',
     description: 'High-performance S3-compatible object storage',
     category: 'storage',
+    i18nCategoryKey: 'category.storage',
     version: '2024.01',
     maturity: 'stable',
     pricing: 'free',
@@ -96,6 +103,7 @@ const services = [
     name: 'Nginx Proxy Manager',
     description: 'Reverse proxy with SSL management UI',
     category: 'networking',
+    i18nCategoryKey: 'category.networking',
     version: '2.10',
     maturity: 'stable',
     pricing: 'free',
@@ -107,6 +115,7 @@ const services = [
     name: 'Authentik',
     description: 'Open source identity provider with OIDC/SAML',
     category: 'identity',
+    i18nCategoryKey: 'category.identity',
     version: '2024.01',
     maturity: 'stable',
     pricing: 'free',
@@ -118,6 +127,7 @@ const services = [
     name: 'Vaultwarden',
     description: 'Bitwarden-compatible password manager',
     category: 'security',
+    i18nCategoryKey: 'category.security',
     version: '1.32',
     maturity: 'stable',
     pricing: 'free',
@@ -129,6 +139,7 @@ const services = [
     name: 'Portainer',
     description: 'Docker management UI for containers and stacks',
     category: 'developer-tools',
+    i18nCategoryKey: 'category.developer-tools',
     version: '2.21',
     maturity: 'stable',
     pricing: 'free',
@@ -138,6 +149,7 @@ const services = [
 ];
 
 export function MarketplacePage() {
+  const { t } = useI18n();
   const search = useSearch({ from: '/marketplace', select: (s) => s });
   const [query, setQuery] = useState(search?.q || '');
   const [selectedCategory, setSelectedCategory] = useState(search?.category || 'all');
@@ -158,10 +170,10 @@ export function MarketplacePage() {
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h1 className="text-display-lg font-bold text-canvas-900 dark:text-canvas-50 mb-4">
-              Marketplace
+              {t('marketplace.title')}
             </h1>
             <p className="text-body-lg text-canvas-500 dark:text-canvas-400 mb-8">
-              Discover and deploy services instantly. Search, deploy, and manage your infrastructure.
+              {t('marketplace.subtitle')}
             </p>
             {/* Hero Search Bar - Primary CTA per design system */}
             <div className="relative max-w-2xl mx-auto">
@@ -170,11 +182,11 @@ export function MarketplacePage() {
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search services, databases, tools..."
+                placeholder={t('marketplace.searchPlaceholder')}
                 className="input pl-14 pr-12 py-4 text-lg rounded-xl bg-white/80 dark:bg-canvas-800/80 border border-canvas-200 dark:border-canvas-700 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
               <button className="absolute right-3 top-1/2 -translate-y-1/2 btn-primary px-6 py-2.5 text-sm font-medium">
-                Search
+                {t('marketplace.searchButton')}
               </button>
             </div>
           </div>
@@ -185,8 +197,8 @@ export function MarketplacePage() {
       <section className="mb-16 animate-in">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-display-sm font-bold text-canvas-900 dark:text-canvas-50">Categories</h2>
-            <p className="text-body-md text-canvas-500 dark:text-canvas-400 mt-1">Explore services by category</p>
+            <h2 className="text-display-sm font-bold text-canvas-900 dark:text-canvas-50">{t('marketplace.categories')}</h2>
+            <p className="text-body-md text-canvas-500 dark:text-canvas-400 mt-1">{t('marketplace.categoriesSubtitle')}</p>
           </div>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
@@ -204,7 +216,7 @@ export function MarketplacePage() {
               <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 mx-auto mb-4">
                 <cat.icon className="h-7 w-7" aria-hidden="true" />
               </div>
-              <h3 className="text-heading-sm font-semibold text-canvas-900 dark:text-canvas-50 mb-1">{cat.name}</h3>
+              <h3 className="text-heading-sm font-semibold text-canvas-900 dark:text-canvas-50 mb-1">{t(cat.i18nKey)}</h3>
             </Link>
           ))}
         </div>
@@ -214,9 +226,9 @@ export function MarketplacePage() {
       <section className="animate-in">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
           <div>
-            <h2 className="text-display-sm font-bold text-canvas-900 dark:text-canvas-50">Services</h2>
+            <h2 className="text-display-sm font-bold text-canvas-900 dark:text-canvas-50">{t('marketplace.services')}</h2>
             <p className="text-canvas-500 dark:text-canvas-400 mt-1">
-              {filteredServices.length} {filteredServices.length === 1 ? 'service' : 'services'} found
+              {t('marketplace.servicesFound', { count: filteredServices.length.toString() })}
             </p>
           </div>
           <div className="flex items-center gap-3 mt-4 sm:mt-0">
@@ -226,7 +238,7 @@ export function MarketplacePage() {
               className="input w-auto min-w-[180px] appearance-none bg-canvas-100 dark:bg-canvas-800"
             >
               {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                <option key={cat.id} value={cat.id}>{t(cat.i18nKey)}</option>
               ))}
             </select>
 
@@ -235,7 +247,7 @@ export function MarketplacePage() {
                 type="button"
                 onClick={() => setViewMode('grid')}
                 className={cn('p-3 transition-colors', viewMode === 'grid' ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400' : 'text-canvas-400 hover:text-canvas-600 dark:hover:text-canvas-300')}
-                aria-label="Grid view"
+                aria-label={t('marketplace.viewMode.grid')}
                 aria-pressed={viewMode === 'grid'}
               >
                 <div className="grid grid-cols-2 gap-1 h-5 w-5">
@@ -249,7 +261,7 @@ export function MarketplacePage() {
                 type="button"
                 onClick={() => setViewMode('list')}
                 className={cn('p-3 transition-colors', viewMode === 'list' ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400' : 'text-canvas-400 hover:text-canvas-600 dark:hover:text-canvas-300')}
-                aria-label="List view"
+                aria-label={t('marketplace.viewMode.list')}
                 aria-pressed={viewMode === 'list'}
               >
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -267,15 +279,15 @@ export function MarketplacePage() {
             : 'space-y-4'
         )}>
           {filteredServices.map((service, index) => (
-            <ServiceCard key={service.id} service={service} mode={viewMode} index={index} />
+            <ServiceCard key={service.id} service={service} mode={viewMode} index={index} t={t} />
           ))}
         </div>
 
         {filteredServices.length === 0 && (
           <div className="text-center py-16 animate-in">
             <Search className="h-16 w-16 text-canvas-300 dark:text-canvas-600 mx-auto mb-4" aria-hidden="true" />
-            <h3 className="text-heading-md font-medium text-canvas-900 dark:text-canvas-50 mb-2">No services found</h3>
-            <p className="text-canvas-500 dark:text-canvas-400">Try adjusting your search or filters</p>
+            <h3 className="text-heading-md font-medium text-canvas-900 dark:text-canvas-50 mb-2">{t('marketplace.noServices')}</h3>
+            <p className="text-canvas-500 dark:text-canvas-400">{t('marketplace.adjustFilters')}</p>
           </div>
         )}
       </section>
@@ -283,7 +295,7 @@ export function MarketplacePage() {
   );
 }
 
-function ServiceCard({ service, mode, index }: { service: typeof services[0]; mode: 'grid' | 'list'; index: number }) {
+function ServiceCard({ service, mode, index, t }: { service: typeof services[0]; mode: 'grid' | 'list'; index: number; t: (key: string, params?: Record<string, string>) => string }) {
   const maturityColors: Record<string, string> = {
     stable: 'badge-success',
     beta: 'badge-warning',
@@ -314,20 +326,20 @@ function ServiceCard({ service, mode, index }: { service: typeof services[0]; mo
               {service.name}
             </h3>
             <span className={cn('badge', maturityColors[service.maturity])}>
-              {service.maturity}
+              {t(`marketplace.maturity.${service.maturity}`)}
             </span>
             <span className={cn('badge', pricingColors[service.pricing])}>
-              {service.pricing}
+              {t(`marketplace.pricing.${service.pricing}`)}
             </span>
           </div>
           <p className="text-body-sm text-canvas-500 dark:text-canvas-400 mb-3 line-clamp-2">{service.description}</p>
           <div className="flex items-center gap-3 text-caption text-canvas-500">
-            <span className="font-mono">v{service.version}</span>
-            <span>⭐ {service.stars.toLocaleString()}</span>
+            <span className="font-mono">{t('service.version', { version: service.version })}</span>
+            <span>{t('service.stars', { stars: service.stars.toLocaleString() })}</span>
           </div>
         </div>
         <button className="btn-primary shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          Deploy
+          {t('marketplace.deploy')}
         </button>
       </Link>
     );
@@ -342,7 +354,7 @@ function ServiceCard({ service, mode, index }: { service: typeof services[0]; mo
           </div>
           <div className="flex items-center gap-1">
             <span className={cn('badge', maturityColors[service.maturity])}>
-              {service.maturity}
+              {t(`marketplace.maturity.${service.maturity}`)}
             </span>
           </div>
         </div>
@@ -362,15 +374,15 @@ function ServiceCard({ service, mode, index }: { service: typeof services[0]; mo
       <div className="border-t border-canvas-200 dark:border-canvas-700 p-6 pt-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-caption text-canvas-500">
-            <span className="font-mono">v{service.version}</span>
+            <span className="font-mono">{t('service.version', { version: service.version })}</span>
             <span className="text-canvas-600">·</span>
-            <span>⭐ {service.stars.toLocaleString()}</span>
+            <span>{t('service.stars', { stars: service.stars.toLocaleString() })}</span>
           </div>
           <span className={cn('badge', pricingColors[service.pricing])}>
-            {service.pricing === 'free' ? 'Free' : service.pricing}
+            {service.pricing === 'free' ? t('marketplace.pricing.free') : t(`marketplace.pricing.${service.pricing}`)}
           </span>
         </div>
-        <button className="btn-primary w-full mt-4">Deploy</button>
+        <button className="btn-primary w-full mt-4">{t('marketplace.deploy')}</button>
       </div>
     </Link>
   );

@@ -34,7 +34,7 @@ const authStoreCreator = (set: any, get: any) => ({
   accessToken: null,
   refreshToken: null,
   isAuthenticated: false,
-  isLoading: false,
+  isLoading: true, // Start with loading to prevent premature rendering
   error: null,
 
   login: async (email: string, password: string) => {

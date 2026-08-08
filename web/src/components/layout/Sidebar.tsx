@@ -12,17 +12,19 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '../../utils/cn';
+import { useI18n } from '../../context/I18nContext';
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { name: 'Marketplace', href: '/marketplace', icon: Store },
-  { name: 'My Services', href: '/services', icon: Server },
-  { name: 'Settings', href: '/settings', icon: Settings },
+  { name: 'nav.dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'nav.marketplace', href: '/marketplace', icon: Store },
+  { name: 'nav.deployments', href: '/services', icon: Server },
+  { name: 'nav.settings', href: '/settings', icon: Settings },
 ];
 
 export function Sidebar() {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const { t } = useI18n();
 
   return (
     <aside
@@ -39,12 +41,12 @@ export function Sidebar() {
             to="/"
             className="flex items-center gap-2"
             style={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : 'auto', transition: 'opacity 150ms ease, width 150ms ease' }}
-            aria-label="Service Marketplace"
+            aria-label={t('app.name')}
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-600 flex-shrink-0">
               <Store className="h-5 w-5 text-white" aria-hidden="true" />
             </div>
-            <span className="font-semibold text-base text-white whitespace-nowrap">Service Marketplace</span>
+            <span className="font-semibold text-base text-white whitespace-nowrap">{t('app.name')}</span>
           </Link>
         </div>
 
@@ -63,11 +65,11 @@ export function Sidebar() {
                     ? 'bg-primary-600/20 text-primary-400'
                     : 'text-dark-400 hover:bg-dark-800 hover:text-dark-100'
                 )}
-                title={collapsed ? item.name : undefined}
+                title={collapsed ? t(item.name) : undefined}
                 aria-current={isActive ? 'page' : undefined}
               >
                 <item.icon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
-                {!collapsed && <span>{item.name}</span>}
+                {!collapsed && <span>{t(item.name)}</span>}
               </Link>
             );
           })}
@@ -89,7 +91,7 @@ export function Sidebar() {
             ) : (
               <>
                 <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-                <span>Collapse</span>
+                <span>{t('common.collapse')}</span>
               </>
             )}
           </button>
