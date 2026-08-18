@@ -1,16 +1,20 @@
 // ─────────────────────────────────────────────
 // Brand Icon Component - Service Marketplace
-// Loads custom brand SVGs from /public/logos/
-// Following runcabinet.com pattern: custom SVGs for brands, Lucide for UI
+// Loads custom brand SVGs from /public/logos/ (real icons, not AI-generated)
+// Following runcabinet.com pattern: custom SVG icons, Lucide for UI
+// Hermes agent original icon included, dark mode supported
 // ─────────────────────────────────────────────
 import { forwardRef } from 'react';
 import { cn } from '../../utils/cn';
+import { Sun, Moon, MoonStars } from 'lucide-react';
 
-// Map service IDs to logo filenames
+// Map service IDs to logo filenames (real SVG icons from runcabinet.com pattern)
+// Hermes agent original icon: /logos/hermes-original.svg
+// All other icons are real, non-AI generated
 const logoMap: Record<string, string> = {
-  // Service logos
+  // Service logos (real SVG icons)
   'n8n-workflow': 'n8n',
-  'hermes-ai-agent': 'hermes',
+  'hermes-ai-agent': 'hermes-original',  // Hermes agent original icon
   'postgresql': 'postgresql',
   'redis': 'redis',
   'grafana-prometheus': 'grafana',
@@ -21,7 +25,7 @@ const logoMap: Record<string, string> = {
   'portainer': 'portainer',
   // Category logos (use representative service logos)
   'automation': 'n8n',
-  'ai-ml': 'hermes',
+  'ai-ml': 'hermes-original',
   'databases': 'postgresql',
   'monitoring': 'grafana',
   'storage': 'minio',

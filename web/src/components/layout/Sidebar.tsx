@@ -13,6 +13,7 @@ import {
 import { useState } from 'react';
 import { cn } from '../../utils/cn';
 import { useI18n } from '../../context/I18nContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const navigation = [
   { name: 'nav.dashboard', href: '/', icon: LayoutDashboard },
@@ -25,6 +26,7 @@ export function Sidebar() {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const { t } = useI18n();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <aside
@@ -44,7 +46,11 @@ export function Sidebar() {
             aria-label={t('app.name')}
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-500/20 flex-shrink-0 border border-primary-500/30">
-              <Store className="h-5 w-5 text-primary-400" aria-hidden="true" />
+              {theme === 'dark' ? (
+                <Sun className="h-4 w-4 text-primary-400" aria-hidden="true" />
+              ) : (
+                <Moon className="h-4 w-4 text-primary-400" aria-hidden="true" />
+              )}
             </div>
             <span className="font-semibold text-base text-white whitespace-nowrap">{t('app.name')}</span>
           </Link>
@@ -60,20 +66,33 @@ export function Sidebar() {
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
-                  isActive
-                    ? 'bg-primary-500/20 text-primary-400 border border-primary-500/30'
-                    : 'text-canvas-400 hover:bg-white/5 hover:text-white'
+                  'flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-primary-50/20 hover:text-primary-400 transition-colors',
+                  isActive && 'bg-primary-500/10 text-primary-400'
                 )}
-                title={collapsed ? t(item.name) : undefined}
-                aria-current={isActive ? 'page' : undefined}
+                aria-current="page"
               >
-                <item.icon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
-                {!collapsed && <span>{t(item.name)}</span>}
+                <item.icon className="h-5 w-5" aria-hidden="true" />
+                <span className="font-medium text-sm text-canvas-400 whitespace-nowrap">{t(item.name)}</span>
               </Link>
             );
           })}
         </nav>
+
+        {/* Theme toggle at bottom of sidebar */}
+        <div className="mt-6 pt-6 border-t border-white/10">
+          <button
+            onClick={toggleTheme}
+            className="w-full flex items-center justify-center rounded-lg px-3 py-2 text-sm text-canvas-400 hover:bg-primary-500/20 transition-colors"
+            aria-label={theme === 'dark' ? t('header.lightMode') : t('header.darkMode')}
+          >
+            {theme === 'dark' ? (
+              <Sun className="h-4 w-4 mr-2" aria-hidden="true" />
+            ) : (
+              <Moon className="h-4 w-4 mr-2" aria-hidden="true" />
+            )}
+            {theme === 'dark' ? t('settings.light') : t('settings.dark')}
+          </button>
+        </div>
 
         {/* Collapse toggle */}
         <div className="p-4 border-t border-white/10">

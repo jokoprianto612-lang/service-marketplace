@@ -2,7 +2,7 @@
 // Header Component - NVIDIA Build Style
 // ─────────────────────────────────────────────
 import { Link, useNavigate } from '@tanstack/react-router';
-import { Menu, Bell, Sun, Moon, LogOut, User, ChevronDown } from 'lucide-react';
+import { Menu, Bell, Sun, Moon, MoonStars, LogOut, User, ChevronDown } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useAuthStore } from '../../hooks/useAuthStore';
 import { useTheme } from '../../context/ThemeContext';
@@ -12,7 +12,7 @@ import { useI18n } from '../../context/I18nContext';
 export function Header() {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, setTheme } = useTheme();
   const { t } = useI18n();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -49,7 +49,7 @@ export function Header() {
         {/* Page title - hidden on mobile */}
         <div className="hidden lg:block flex-1">
           <h1 className="text-heading-sm font-semibold text-white truncate">
-            {t('nav.title') || 'Wee Wok The Tok'}
+            {t('nav.title') || 'Service Marketplace'}
           </h1>
         </div>
 
@@ -66,7 +66,7 @@ export function Header() {
             </span>
           </button>
 
-          {/* Theme toggle - Elegant NVIDIA style */}
+          {/* Theme toggle - Elegant NVIDIA style with moon/sun */}
           <button
             onClick={toggleTheme}
             className="relative p-2 rounded-lg text-canvas-400 hover:bg-white/5 hover:text-white transition-all duration-200"
@@ -80,42 +80,15 @@ export function Header() {
           </button>
 
           {/* User menu */}
-          <div className="relative" ref={userMenuRef}>
-            <button
-              onClick={() => setUserMenuOpen(!userMenuOpen)}
-              className="flex items-center gap-2 rounded-lg p-1.5 hover:bg-white/5 transition-colors"
-              aria-expanded={userMenuOpen}
-              aria-haspopup="true"
-            >
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500/20">
-                <User className="h-5 w-5 text-primary-400" aria-hidden="true" />
-              </div>
-              <span className="hidden lg:block text-sm font-medium text-white">
-                {user?.name || t('header.user') || 'User'}
-              </span>
-              <ChevronDown className="hidden lg:block h-4 w-4 text-canvas-400" aria-hidden="true" />
+          <div ref={userMenuRef} className="hidden lg:block items-center gap-2">
+            <button onClick={() => setUserMenuOpen(!userMenuOpen)} className="relative p-2 rounded-lg text-canvas-400 hover:bg-white/5 hover:text-white transition-colors" aria-label={t('header.profile')}>
+              <User className="h-5 w-5" aria-hidden="true" />
             </button>
-
             {userMenuOpen && (
-              <div className="dropdown">
-                <div className="px-4 py-3 border-b border-white/10">
-                  <p className="text-sm font-medium text-white">{user?.name || t('header.user') || 'User'}</p>
-                  <p className="text-xs text-canvas-400 truncate">{user?.email}</p>
-                </div>
-                <Link
-                  to="/settings"
-                  className="dropdown-item"
-                  onClick={() => setUserMenuOpen(false)}
-                >
-                  <User className="h-4 w-4" aria-hidden="true" />
-                  {t('nav.settings') || 'Profile'}
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="dropdown-item text-error-400 hover:text-error-300"
-                >
-                  <LogOut className="h-4 w-4" aria-hidden="true" />
-                  {t('header.signOut') || 'Sign out'}
+              <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white/90 backdrop-blur-2xl shadow-lg p-4 border border-white/10">
+                <span className="font-medium text-canvas-600 mb-2">{t('header.user')}: {user?.name || 'User'}</span>
+                <button onClick={handleLogout} className="w-full py-2 px-4 text-left text-canvas-600 hover:bg-red-50/50 rounded-md mb-2">
+                  {t('header.signOut')}
                 </button>
               </div>
             )}

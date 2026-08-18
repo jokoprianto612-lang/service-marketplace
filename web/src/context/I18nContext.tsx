@@ -18,8 +18,8 @@ const I18nContext = createContext<I18nContextType | undefined>(undefined);
 const translations: Record<Locale, Record<string, string>> = {
   en: {
     // App Brand
-    'app.name': 'Wee Wok The Tok',
-    'app.tagline': 'Discover and deploy services instantly.',
+    'app.name': 'Service Marketplace',
+    'app.tagline': 'Self-hosted services. One-click deploy. Full control.',
     
     // Navigation
     'nav.dashboard': 'Dashboard',
@@ -30,7 +30,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'nav.login': 'Login',
     'nav.register': 'Register',
     'nav.menu': 'Menu',
-    'nav.title': 'Wee Wok The Tok',
+    'nav.title': 'Service Marketplace',
     
     // Header
     'header.notifications': 'Notifications',
@@ -91,7 +91,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'service.resources': 'Resources',
     
     // Dashboard
-    'dashboard.title': 'Wee Wok The Tok',
+    'dashboard.title': 'Service Marketplace',
     'dashboard.subtitle': 'Discover and deploy services instantly. Search, deploy, and manage your infrastructure.',
     'dashboard.categories': 'Categories',
     'dashboard.categoriesSubtitle': 'Explore services by category',
@@ -196,7 +196,7 @@ const translations: Record<Locale, Record<string, string>> = {
   
   id: {
     // App Brand
-    'app.name': 'Wee Wok The Tok',
+    'app.name': 'Service Marketplace',
     'app.tagline': 'Temukan dan sebarkan layanan secara instan.',
     
     // Navigation
@@ -208,7 +208,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'nav.login': 'Masuk',
     'nav.register': 'Daftar',
     'nav.menu': 'Menu',
-    'nav.title': 'Wee Wok The Tok',
+    'nav.title': 'Service Marketplace',
     
     // Header
     'header.notifications': 'Notifikasi',
@@ -269,7 +269,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'service.resources': 'Sumber Daya',
     
     // Dashboard
-    'dashboard.title': 'Wee Wok The Tok',
+    'dashboard.title': 'Service Marketplace',
     'dashboard.subtitle': 'Temukan dan sebarkan layanan secara instan. Cari, sebarkan, dan kelola infrastruktur Anda.',
     'dashboard.categories': 'Kategori',
     'dashboard.categoriesSubtitle': 'Jelajahi layanan berdasarkan kategori',
@@ -374,7 +374,7 @@ const translations: Record<Locale, Record<string, string>> = {
   
   zh: {
     // App Brand
-    'app.name': 'Wee Wok The Tok',
+    'app.name': 'Service Marketplace',
     'app.tagline': '即时发现并部署服务。',
     
     // Navigation
@@ -386,7 +386,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'nav.login': '登录',
     'nav.register': '注册',
     'nav.menu': '菜单',
-    'nav.title': 'Wee Wok The Tok',
+    'nav.title': 'Service Marketplace',
     
     // Header
     'header.notifications': '通知',
@@ -447,7 +447,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'service.resources': '资源',
     
     // Dashboard
-    'dashboard.title': 'Wee Wok The Tok',
+    'dashboard.title': 'Service Marketplace',
     'dashboard.subtitle': '即时发现并部署服务。搜索、部署和管理您的基础设施。',
     'dashboard.categories': '分类',
     'dashboard.categoriesSubtitle': '按分类浏览服务',

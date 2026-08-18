@@ -26,10 +26,59 @@ const refreshSchema = z.object({
 export async function authRoutes(app: FastifyInstance) {
   const prisma = app.prisma as PrismaClient;
 
+  // ─── Bot / Brute-force guard for auth endpoints ───
+  // ponytail: in-memory IP store; per-account locks if throughput matters
+  const authRateStore = new Map<string, { count: number; resetAt: number }>();
+  const AUTH_MAX = 5; // 5 attempts per minute per IP
+  const AUTH_WINDOW_MS = 60 * 1000;
+
+  function authRateCheck(request: FastifyRequest, reply: FastifyReply): boolean {
+    const ip = (request.ip || 'unknown').toString();
+    const key = `auth:${ip}`;
+    const now = Date.now();
+    let rec = authRateStore.get(key);
+    if (!rec || now > rec.resetAt) {
+      rec = { count: 0, resetAt: now + AUTH_WINDOW_MS };
+      authRateStore.set(key, rec);
+    }
+    rec.count++;
+    if (rec.count > AUTH_MAX) {
+      reply.status(429).send({
+        success: false,
+        error: { code: 'RATE_LIMIT_EXCEEDED', message: 'Too many auth attempts, try again later', statusCode: 429 },
+      });
+      return false;
+    }
+    return true;
+  }
+
+  // Bot detection: basic User-Agent + hidden honeypot check
+  function botCheck(request: FastifyRequest, reply: FastifyReply): boolean {
+    const ua = (request.headers['user-agent'] || '').toString().toLowerCase();
+    const suspicious = /curl|wget|python-requests|scrapy|bot|crawler|spider|headless/i;
+    if (suspicious.test(ua) && !ua.includes('chrome') && !ua.includes('firefox') && !ua.includes('safari')) {
+      reply.status(403).send({
+        success: false,
+        error: { code: 'BOT_DETECTED', message: 'Suspicious client detected', statusCode: 403 },
+      });
+      return false;
+    }
+    const body = request.body as any;
+    if (body && body._honey !== undefined) {
+      reply.status(403).send({
+        success: false,
+        error: { code: 'BOT_HONEYPOT', message: 'Bot trap triggered', statusCode: 403 },
+      });
+      return false;
+    }
+    return true;
+  }
+
   // POST /auth/login - Email/password login
   app.post('/login', {
     schema: { body: loginSchema },
   }, async (request, reply) => {
+    if (!authRateCheck(request, reply) || !botCheck(request, reply)) return;
     const { email, password } = request.body as z.infer<typeof loginSchema>;
 
     const user = await prisma.user.findUnique({ where: { email } });
@@ -109,6 +158,7 @@ export async function authRoutes(app: FastifyInstance) {
   app.post('/register', {
     schema: { body: registerSchema },
   }, async (request, reply) => {
+    if (!authRateCheck(request, reply) || !botCheck(request, reply)) return;
     const { email, password, name } = request.body as z.infer<typeof registerSchema>;
 
     // Check if user exists
@@ -133,7 +183,7 @@ export async function authRoutes(app: FastifyInstance) {
         name,
         passwordHash,
         roles,
-        emailVerified: new Date(),
+        emailVerified: null, // ponytail: require verification before deploy/OWNER actions
       },
     });
 
@@ -330,4 +380,4 @@ export async function authRoutes(app: FastifyInstance) {
   app.get('/google/callback', async (request, reply) => {
     return reply.send({ success: true, message: 'Google OAuth not implemented yet' });
   });
-}
+}/usr/bin/bash: line 7: /c/Users/asusv/AppData/Local/hermes/cache/terminal/hermes-cwd-2df5e012d7dd.txt: Device or resource busy

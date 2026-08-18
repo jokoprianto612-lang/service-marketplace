@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────
-// Batik Solo Ornament — Wee Wok The Tok
+// Batik Solo Ornament — Service Marketplace
 // Authentic Surakarta (Solo) motifs rendered as SVG:
 //   • Parang Barong  — diagonal "sword" S-curve, the keraton motif
 //   • Truntum        — small stars, symbol of rekindled love

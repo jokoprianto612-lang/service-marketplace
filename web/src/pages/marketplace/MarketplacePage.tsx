@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────
-// Marketplace Page - Wee Wok The Tok
+// Marketplace Page - Service Marketplace
 // Pattern: Marketplace / Directory
 // Style: Vibrant & Block-based
 // ─────────────────────────────────────────────
@@ -207,7 +207,7 @@ export function MarketplacePage() {
               key={cat.id}
               to={cat.id === 'all' ? '/marketplace' : `/marketplace?category=${cat.id}`}
               className={cn(
-                'card-elevated p-6 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1',
+                'card-build-hover p-6 text-center',
                 selectedCategory === cat.id ? 'ring-2 ring-primary-500' : '',
                 `stagger-${index + 1}`
               )}
@@ -314,7 +314,7 @@ function ServiceCard({ service, mode, index, t }: { service: typeof services[0];
     return (
       <Link
         to={`/marketplace/${service.id}`}
-        className="card-elevated flex items-center gap-5 p-5 group transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
+        className="card-build-hover flex items-center gap-5 p-5 group"
         style={{ animationDelay: `${index * 60}ms` }}
       >
         <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-900/30 shrink-0">
@@ -346,7 +346,7 @@ function ServiceCard({ service, mode, index, t }: { service: typeof services[0];
   }
 
   return (
-    <Link to={`/marketplace/${service.id}`} className="card-elevated flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1" style={{ animationDelay: `${index * 80}ms` }}>
+    <Link to={`/marketplace/${service.id}`} className="card-build-hover flex flex-col h-full" style={{ animationDelay: `${index * 80}ms` }}>
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-900/30">

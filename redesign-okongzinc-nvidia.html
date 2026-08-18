@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OkongzINC Service Marketplace — Powerful Redesign</title>
+<!-- ponytail: HTML mockup (visual only), not final React impl. Needs CAPTCHA + auth rate limit before CF deploy. Master.md unchanged. -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,800;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --green: #76B900; --green-glow: rgba(118,185,0,0.35); --dark: #050b07; --dark-card: rgba(13,26,17,0.6); --glass-border: rgba(255,255,255,0.06); }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: var(--dark); color: #fff; overflow-x: hidden; margin: 0; }
+
+  /* NVIDIA-style neural network background */
+  #neural-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.45; }
+
+  /* Glassmorphism */
+  .glass { background: var(--dark-card); backdrop-filter: blur(14px) saturate(120%); -webkit-backdrop-filter: blur(14px) saturate(120%); border: 1px solid var(--glass-border); border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05); }
+  .glass-card { background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 24px; transition: border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; }
+  .glass-card:hover { border-color: rgba(118,185,0,0.3); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(118,185,0,0.08); }
+
+  /* Search bar */
+  .search-pill { background: #0e1111; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 14px 20px; display: flex; align-items: center; gap: 12px; transition: border-color 0.2s, box-shadow 0.2s; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+  .search-pill:focus-within { border-color: rgba(118,185,0,0.5); box-shadow: 0 0 0 3px rgba(118,185,0,0.15), 0 4px 20px rgba(0,0,0,0.5); }
+  .search-pill input { background: transparent; border: none; outline: none; color: #fff; font-size: 15px; width: 100%; font-family: inherit; }
+  .search-pill input::placeholder { color: #888; }
+
+  /* Logo text 3D effect */
+  .logo-text { font-family: 'JetBrains Mono', monospace; font-weight: 700; letter-spacing: -0.04em; line-height: 0.85; }
+  .logo-okong { background: linear-gradient(180deg, #E0F7FA 0%, #51799B 60%, #1A2C3D 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 4px 12px rgba(81,121,155,0.35)); }
+  .logo-zinc { background: linear-gradient(180deg, #FFA726 0%, #E65100 60%, #B32A00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 4px 12px rgba(230,120,10,0.35)); }
+
+  /* Buttons */
+  .btn-green { background: linear-gradient(135deg, #76B900, #5A8A00); color: #fff; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 14px; letter-spacing: 0.02em; transition: all 0.2s ease; box-shadow: 0 4px 14px rgba(118,185,0,0.35); }
+  .btn-green:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(118,185,0,0.5); }
+
+  /* Animated gradient border ring */
+  .glow-ring { position: relative; border-radius: 16px; padding: 1px; background: linear-gradient(135deg, rgba(118,185,0,0.3), rgba(245,158,11,0.2), rgba(118,185,0,0.1)); }
+  .glow-ring-inner { background: var(--dark-card); border-radius: 15px; height: 100%; }
+</style>
+</head>
+<body class="relative">
+
+<!-- NVIDIA-style neural network canvas background -->
+<canvas id="neural-canvas"></canvas>
+
+<!-- Main content -->
+<main class="relative z-10 min-h-screen flex flex-col">
+
+  <!-- Navigation -->
+  <nav class="w-full px-6 lg:px-12 py-5 flex items-center justify-between sticky top-0 z-50 backdrop-blur-md bg-[#050b07]/60 border-b border-white/[0.05]">
+    <a href="#" class="flex items-center gap-3 group">
+      <!-- OkongzINC Logo representation: mechanical gorilla + 3D text -->
+      <div class="relative w-10 h-10 flex items-center justify-center">
+        <!-- Simplified SVG gorilla mascot -->
+        <svg viewBox="0 0 64 64" width="40" height="40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="furGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#5B7A99"/>
+              <stop offset="100%" stop-color="#2C4A66"/>
+            </linearGradient>
+            <linearGradient id="armorGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#7A95A8"/>
+              <stop offset="60%" stop-color="#A8BECF"/>
+              <stop offset="100%" stop-color="#5B7A99"/>
+            </linearGradient>
+          </defs>
+          <!-- Armor body -->
+          <rect x="12" y="28" width="40" height="28" rx="10" fill="url(#armorGrad)"/>
+          <!-- Fur face -->
+          <ellipse cx="32" cy="26" rx="14" ry="12" fill="#D4A574"/>
+          <ellipse cx="32" cy="20" rx="12" ry="9" fill="#F4A460"/>
+          <!-- Metal helmet crest -->
+          <path d="M18 18 L32 6 L46 18 L42 22 L32 12 L22 22 Z" fill="#BDC3C7"/>
+          <!-- Gears behind -->
+          <circle cx="10" cy="24" r="8" fill="#E67E22" opacity="0.9"/>
+          <circle cx="54" cy="24" r="8" fill="#E67E22" opacity="0.9"/>
+          <!-- Eyes -->
+          <circle cx="26" cy="22" r="2.5" fill="#3E2723"/>
+          <circle cx="38" cy="22" r="2.5" fill="#3E2723"/>
+          <!-- Rivets -->
+          <circle cx="14" cy="36" r="1.5" fill="#ECF0F1"/>
+          <circle cx="50" cy="36" r="1.5" fill="#ECF0F1"/>
+          <circle cx="14" cy="48" r="1.5" fill="#ECF0F1"/>
+          <circle cx="50" cy="48" r="1.5" fill="#ECF0F1"/>
+        </svg>
+      </div>
+      <div class="flex flex-col">
+        <span class="logo-text text-xl tracking-tight leading-none">
+          <span class="logo-okong">OKONG</span><span class="logo-zinc">ZINC</span>
+        </span>
+        <span class="text-[10px] text-white/30 font-mono tracking-[0.15em] uppercase">Service Marketplace</span>
+      </div>
+    </a>
+    <div class="hidden md:flex items-center gap-8 text-sm font-medium text-white/70">
+      <a href="#" class="hover:text-white transition-colors">Explore</a>
+      <a href="#" class="hover:text-white transition-colors">Catalog</a>
+      <a href="#" class="hover:text-white transition-colors">Deploy</a>
+      <a href="#" class="hover:text-white transition-colors">Dashboard</a>
+      <a href="#" class="hover:text-white transition-colors">Docs</a>
+    </div>
+    <a href="#" class="btn-green text-xs">Login</a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="relative z-10 flex flex-col items-center justify-center pt-28 pb-16 px-6 text-center">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-[0.85] mb-8">
+        <span class="text-white drop-shadow-[0_8px_30px_rgba(255,255,255,0.08)]">Start Building Your</span><br>
+        <span class="text-[#76B900] drop-shadow-[0_0_60px_rgba(118,185,0,0.45)]">AI Marketplace</span>
+      </h1>
+      <p class="text-white/50 text-lg md:text-xl max-w-xl mx-auto mb-10 font-light leading-relaxed">
+        Self-hosted services. One-click deploy. Full control. Built with OkongzINC.
+      </p>
+      <div class="max-w-2xl mx-auto">
+        <div class="search-pill">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" placeholder="Search for services, blueprints, skills..." />
+          <button class="btn-green text-xs whitespace-nowrap">Search</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Promotional Banner (NemoClaw style) -->
+  <section class="relative z-10 w-full max-w-5xl mx-auto px-6 -mt-4 mb-20">
+    <div class="glass rounded-2xl overflow-hidden relative">
+      <div class="absolute inset-0 bg-gradient-to-r from-[#76B900]/10 via-transparent to-[#FFA726]/10 pointer-events-none"></div>
+      <div class="relative z-10 flex flex-col md:flex-row items-center gap-8 px-8 py-8 md:py-10">
+        <div class="flex-1">
+          <h3 class="text-2xl md:text-3xl font-extrabold text-white mb-2 tracking-tight">Introducing OkongzINC Deploy</h3>
+          <p class="text-white/50 text-sm md:text-base mb-4">Safe agent execution. Control access. Protect data. One-click deploy to Cloudflare.</p>
+          <a href="#" class="inline-flex items-center gap-2 btn-green text-xs">Deploy Now <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        </div>
+        <div class="w-full md:w-[320px] h-[140px] relative rounded-xl overflow-hidden glass-card shrink-0 flex items-center justify-center">
+          <!-- Abstract representation of the gorilla + gears -->
+          <div class="relative w-24 h-24">
+            <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-[0_0_20px_rgba(118,185,0,0.4)]">
+              <defs><linearGradient id="gFur" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5B7A99"/><stop offset="100%" stop-color="#2C4A66"/></linearGradient></defs>
+              <circle cx="20" cy="35" r="12" fill="#E67E22" opacity="0.9"/>
+              <circle cx="80" cy="35" r="12" fill="#E67E22" opacity="0.9"/>
+              <rect x="30" y="40" width="40" height="35" rx="12" fill="url(#gFur)"/>
+              <ellipse cx="50" cy="32" rx="18" ry="14" fill="#D4A574"/>
+              <path d="M38 25 L50 10 L62 25 L58 30 L50 18 L42 30 Z" fill="#BDC3C7"/>
+              <circle cx="42" cy="30" r="2.5" fill="#3E2723"/>
+              <circle cx="58" cy="30" r="2.5" fill="#3E2723"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Grid -->
+  <section class="relative z-10 w-full max-w-6xl mx-auto px-6 pb-24">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Card 1 -->
+      <a href="#" class="glass-card group">
+        <div class="w-10 h-10 rounded-lg bg-[#76B900]/10 flex items-center justify-center mb-5 border border-[#76B900]/20">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#76B900" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h4 class="text-lg font-extrabold text-white mb-2 tracking-tight group-hover:text-[#76B900] transition-colors">Use Inference Endpoints</h4>
+        <p class="text-sm text-white/40 leading-relaxed">Free inference with leading models. Deploy your AI without managing infrastructure.</p>
+        <span class="inline-block mt-4 text-xs font-mono text-[#76B900]/70">API → Ready</span>
+      </a>
+      <!-- Card 2 -->
+      <a href="#" class="glass-card group">
+        <div class="w-10 h-10 rounded-lg bg-[#FFA726]/10 flex items-center justify-center mb-5 border border-[#FFA726]/20">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFA726" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m7.08 7.08 4.24 4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m7.08-7.08 4.24-4.24"/></svg>
+        </div>
+        <h4 class="text-lg font-extrabold text-white mb-2 tracking-tight group-hover:text-[#FFA726] transition-colors">Agentic Skills</h4>
+        <p class="text-sm text-white/40 leading-relaxed">Pre-built capabilities your agent can call. 166+ skills available.</p>
+        <span class="inline-block mt-4 text-xs font-mono text-[#FFA726]/70">166 Skills</span>
+      </a>
+      <!-- Card 3 -->
+      <a href="#" class="glass-card group md:col-span-2 lg:col-span-1">
+        <div class="w-10 h-10 rounded-lg bg-[#A78BFA]/10 flex items-center justify-center mb-5 border border-[#A78BFA]/20">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 14l6-6"/><path d="m15 9-6 6"/></svg>
+        </div>
+        <h4 class="text-lg font-extrabold text-white mb-2 tracking-tight group-hover:text-[#A78BFA] transition-colors">Custom Deploy</h4>
+        <p class="text-sm text-white/40 leading-relaxed">Form-based configuration. Dynamic schema validation. Deploy any stack.</p>
+        <span class="inline-block mt-4 text-xs font-mono text-[#A78BFA]/70">Config → Deploy</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Featured Services -->
+  <section class="relative z-10 w-full max-w-6xl mx-auto px-6 pb-28">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-2 tracking-tight">Featured Services</h2>
+    <p class="text-white/35 text-sm mb-10">Curated one-click deploys for production.</p>
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="glass-card">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-9 h-9 rounded-md bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-xs font-bold">n8</div>
+          <div><h5 class="text-sm font-bold text-white leading-tight">n8n Workflow</h5><span class="text-[10px] text-white/30 font-mono">Automation</span></div>
+        </div>
+        <p class="text-xs text-white/40 mb-4">Extendable workflow automation with 400+ integrations.</p>
+        <a href="#" class="text-xs font-bold text-[#76B900] hover:underline">Deploy →</a>
+      </div>
+      <div class="glass-card">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-9 h-9 rounded-md bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-xs font-bold">PG</div>
+          <div><h5 class="text-sm font-bold text-white leading-tight">PostgreSQL</h5><span class="text-[10px] text-white/30 font-mono">Database</span></div>
+        </div>
+        <p class="text-xs text-white/40 mb-4">Advanced open source relational database.</p>
+        <a href="#" class="text-xs font-bold text-[#76B900] hover:underline">Deploy →</a>
+      </div>
+      <div class="glass-card">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-9 h-9 rounded-md bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white text-xs font-bold">HE</div>
+          <div><h5 class="text-sm font-bold text-white leading-tight">Hermes Agent</h5><span class="text-[10px] text-white/30 font-mono">AI / ML</span></div>
+        </div>
+        <p class="text-xs text-white/40 mb-4">Self-improving AI agent by Nous Research.</p>
+        <a href="#" class="text-xs font-bold text-[#76B900] hover:underline">Deploy →</a>
+      </div>
+      <div class="glass-card">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-9 h-9 rounded-md bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white text-xs font-bold">GR</div>
+          <div><h5 class="text-sm font-bold text-white leading-tight">Grafana</h5><span class="text-[10px] text-white/30 font-mono">Monitoring</span></div>
+        </div>
+        <p class="text-xs text-white/40 mb-4">Observability stack with dashboards.</p>
+        <a href="#" class="text-xs font-bold text-[#76B900] hover:underline">Deploy →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="relative z-10 w-full border-t border-white/[0.05] px-6 lg:px-12 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/20 font-mono">
+    <span>© 2026 OkongzINC Service Marketplace. Built with NVIDIA-style design.</span>
+    <span>Safe agent execution. Protect data.</span>
+  </footer>
+
+</main>
+
+<!-- Canvas neural animation -->
+<script>
+  (function() {
+    const canvas = document.getElementById('neural-canvas');
+    const ctx = canvas.getContext('2d');
+    let w = window.innerWidth; let h = window.innerHeight;
+    function resize() { w = window.innerWidth; h = window.innerHeight; canvas.width = w; canvas.height = h; }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const count = Math.min(120, Math.floor((w * h) / 12000));
+    const nodes = [];
+    for (let i = 0; i < count; i++) {
+      nodes.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 0.6, vy: (Math.random() - 0.5) * 0.6, r: 1 + Math.random() * 2 });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      // Draw faint lines between nearby nodes
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < 140) {
+            const alpha = (1 - dist / 140) * 0.15;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = `rgba(118, 185, 0, ${alpha})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+      // Draw nodes
+      for (const n of nodes) {
+        n.x += n.vx; n.y += n.vy;
+        if (n.x < 0 || n.x > w) n.vx *= -1;
+        if (n.y < 0 || n.y > h) n.vy *= -1;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(118, 185, 0, ${0.4 + Math.random() * 0.3})`;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r * 3, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(118, 185, 0, 0.06)`;
+        ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+</script>
+</body>
+</html>

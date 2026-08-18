@@ -1,6 +1,7 @@
 // ─────────────────────────────────────────────
 // Custom Rate Limiter
 // ─────────────────────────────────────────────
+// ponytail: in-memory global store; per-account locks if throughput matters
 import { FastifyRequest, FastifyReply } from 'fastify';
 
 interface RateLimitOptions {

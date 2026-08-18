@@ -71,11 +71,26 @@
       scroll-behavior: auto !important;
     }
   }
+}
 
-  @supports (font-variation-settings: normal) {
-    body {
-      font-family: 'Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif';
-    }
+/* ─── Redesign additions: OkongzINC / NVIDIA-style glass ─── */
+@layer components {
+  .glass-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 24px;
+    transition: border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .glass-card:hover { border-color: rgba(118,185,0,0.3); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(118,185,0,0.08); }
+  .btn-green { background: linear-gradient(135deg, #76B900, #5A8A00); color: #fff; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 14px; letter-spacing: 0.02em; transition: all 0.2s ease; box-shadow: 0 4px 14px rgba(118,185,0,0.35); }
+  .btn-green:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(118,185,0,0.5); }
+}
+
+@supports (font-variation-settings: normal) {
+  body {
+    font-family: 'Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif';
   }
 }
 
@@ -222,8 +237,8 @@
   }
 
   .card-elevated {
-    @apply bg-white/10 dark:bg-canvas-950/10 border border-white/10 dark:border-white/5 rounded-2xl shadow-2xl backdrop-blur-xl backdrop-saturate-150;
-  }
+      @apply bg-white/10 dark:bg-canvas-950 border border-white/10 dark:border-white/5 rounded-2xl shadow-2xl backdrop-blur-xl backdrop-saturate-150 active:bg-canvas-950 focus:bg-canvas-950;
+    }
 
   .card-glass {
     @apply bg-white/5 dark:bg-canvas-950/5 border border-white/10 dark:border-white/5 rounded-2xl shadow-2xl backdrop-blur-2xl backdrop-saturate-150;

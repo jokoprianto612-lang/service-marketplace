@@ -66,28 +66,22 @@ export function DashboardPage() {
 
   return (
     <div className="section animate-in relative z-10">
-      {/* Hero Section */}
-      <section className="py-12 lg:py-16 animate-in">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <h1 className="text-display-lg font-bold text-white mb-4 gradient-text-green">
-              {t('dashboard.title')}
-            </h1>
-            <p className="text-body-lg text-canvas-400 mb-8">
-              {t('dashboard.subtitle')}
-            </p>
-            {/* Hero Search Bar */}
-            <div className="relative max-w-2xl mx-auto">
-              <Search className="absolute left-5 top-1/2 h-6 w-6 -translate-y-1/2 text-green-400" aria-hidden="true" />
-              <input
-                type="search"
-                placeholder={t('marketplace.searchPlaceholder')}
-                className="input pl-14 pr-12 py-4 text-lg rounded-xl"
-              />
-              <button className="absolute right-3 top-1/2 -translate-y-1/2 btn-primary px-6 py-2.5 text-sm font-medium">
-                {t('marketplace.searchButton')}
-              </button>
-            </div>
+      {/* Hero Section — NVIDIA-style: compact, centered, dark + green glow */}
+      <section className="py-10 lg:py-14 animate-in">
+        <div className="max-w-5xl mx-auto px-4 lg:px-6 text-center">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4 tracking-tight leading-tight">
+            <span className="bg-gradient-to-r from-[#76B900] to-emerald-400 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(118,185,0,0.35)]">Build Your AI Marketplace</span>
+          </h1>
+          <p className="text-white/40 text-base md:text-lg mb-8 max-w-xl mx-auto">Self-hosted services. One-click deploy. Full control.</p>
+          <div className="relative max-w-xl mx-auto">
+            <input
+              type="search"
+              placeholder="Search services, blueprints, skills..."
+              className="w-full pl-5 pr-28 py-3.5 rounded-xl bg-[#0e1111] border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:border-[#76B900]/50 focus:ring-2 focus:ring-[#76B900]/20 shadow-[inset_0_2px_10px_rgba(0,0,0,0.4)]"
+            />
+            <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-br from-[#76B900] to-[#5A8A00] text-white px-4 py-2 rounded-lg text-sm font-bold shadow-[0_4px_14px_rgba(118,185,0,0.4)] hover:shadow-[0_6px_20px_rgba(118,185,0,0.6)] transition-all">
+              Search
+            </button>
           </div>
         </div>
       </section>
@@ -97,26 +91,22 @@ export function DashboardPage() {
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <div className="grid lg:grid-cols-3 gap-6 items-center">
             <div className="lg:col-span-2">
-              <div className="card-glass-hover p-6 h-full min-h-[300px] relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-emerald-500/5 to-amber-500/10" />
-                <div className="relative h-full flex items-center justify-center">
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="w-64 h-64 rounded-full bg-gradient-to-br from-green-500/20 to-emerald-500/20 blur-3xl animate-pulse" />
-                  </div>
-                  <div className="absolute inset-0 flex items-end justify-between p-6 pointer-events-none">
-                    <div>
-                      <span className="badge-info text-sm mb-2">{t('category.ai-ml')}</span>
-                      <h3 className="text-heading-lg font-bold text-white mb-2">Hermes AI Agent</h3>
-                      <p className="text-body-md text-canvas-300">Self-improving AI agent by Nous Research with skills & memory</p>
+              <div className="card-build-hover p-6 h-full min-h-[300px] relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0a0f0c]/80 to-[#060a08]/90 border border-white/[0.06] shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#76B900]/10 via-transparent to-[#FFA726]/5 pointer-events-none" />
+                  <div className="relative z-10 h-full flex flex-col">
+                    <div className="flex-1">
+                      <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#76B900]/15 text-[#76B900] mb-3 border border-[#76B900]/20">AI / ML</span>
+                      <h3 className="text-xl font-extrabold text-white mb-2 tracking-tight">Hermes AI Agent</h3>
+                      <p className="text-sm text-white/40 leading-relaxed">Self-improving AI agent by Nous Research with skills & memory.</p>
                     </div>
-                    <div className="text-right">
-                      <span className="badge-success text-sm">{t('marketplace.maturity.stable')}</span>
+                    <div className="flex items-center justify-between pt-4 border-t border-white/[0.06]">
+                      <span className="text-xs font-mono text-white/30">v1.0.0</span>
+                      <span className="text-xs font-bold text-[#76B900]">Stable</span>
                     </div>
                   </div>
                 </div>
-              </div>
             </div>
-            <div className="card-glass-hover p-6 text-center">
+            <div className="card-build-hover p-6 text-center">
               <Sparkles className="h-12 w-12 text-green-400 mx-auto mb-4" aria-hidden="true" />
               <h3 className="text-heading-md font-semibold text-white mb-2">{t('dashboard.experienceTitle')}</h3>
               <p className="text-body-md text-canvas-400 mb-4">
@@ -155,7 +145,7 @@ export function DashboardPage() {
               key={cat.name}
               to={`/marketplace?category=${cat.serviceId}`}
               className={cn(
-                'card-glass-hover p-6 text-center transition-all duration-300',
+                'card-build-hover p-6 text-center',
                 `stagger-${index + 1}`
               )}
               style={{ animationDelay: `${index * 60}ms` }}
@@ -188,7 +178,7 @@ export function DashboardPage() {
               key={service.name}
               to={`/marketplace/${service.name.toLowerCase().replace(/\s+/g, '-')}`}
               className={cn(
-                'card-glass-hover p-6 flex flex-col h-full transition-all duration-300',
+                'card-build-hover p-6 flex flex-col h-full',
                 index >= 4 ? 'lg:col-span-2' : '',
                 `stagger-${index + 1}`
               )}
@@ -218,7 +208,7 @@ export function DashboardPage() {
       {/* System Resources & Quick Actions */}
       <section className="mb-16 animate-in">
         <div className="grid gap-6 lg:grid-cols-3">
-          <div className="card-glass p-6 lg:col-span-2">
+          <div className="card-build p-6 lg:col-span-2">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-heading-md font-semibold text-white">{t('dashboard.resourceUsage')}</h2>
               <button className="btn-ghost text-sm font-medium" type="button">
@@ -247,7 +237,7 @@ export function DashboardPage() {
             </div>
           </div>
 
-          <div className="card-glass p-6">
+          <div className="card-build p-6">
             <h2 className="text-heading-md font-semibold text-white mb-6">{t('dashboard.quickActions')}</h2>
             <div className="space-y-3">
               {quickActions.map((action, index) => (
@@ -272,7 +262,7 @@ export function DashboardPage() {
 
       {/* Recent Services */}
       <section className="animate-in">
-        <div className="card-glass overflow-hidden">
+        <div className="card-build overflow-hidden">
           <div className="p-6 border-b border-white/10 flex items-center justify-between">
             <h2 className="text-heading-md font-semibold text-white">{t('dashboard.recentServices')}</h2>
             <Link to="/services" className="btn-ghost text-sm font-medium">
